@@ -13997,11 +13997,10 @@ module.exports = __webpack_require__(55);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(37);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(40);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Home__ = __webpack_require__(65);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_Home___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_Home__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_router__ = __webpack_require__(40);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__setup_AdminConfiguration__ = __webpack_require__(73);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__setup_HomeConfiguration__ = __webpack_require__(74);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__setup_Site__ = __webpack_require__(78);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -14016,19 +14015,15 @@ __webpack_require__(14);
 
 
 
-var routes = [{ path: '/', component: __WEBPACK_IMPORTED_MODULE_2__components_Home___default.a }];
+var globalPlugins = [{ def: __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */], options: {} }];
 
-var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
-  mode: 'history',
-  routes: routes
-});
+var siteConfigurations = {
+  default: __WEBPACK_IMPORTED_MODULE_2__setup_HomeConfiguration__["a" /* default */],
+  other: [__WEBPACK_IMPORTED_MODULE_1__setup_AdminConfiguration__["a" /* default */]]
+};
 
-__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
-
-var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
-  el: '#site',
-  router: router
-});
+var quadVerseSite = new __WEBPACK_IMPORTED_MODULE_3__setup_Site__["a" /* default */](siteConfigurations);
+quadVerseSite.setup(globalPlugins, '#site');
 
 /***/ }),
 /* 14 */
@@ -50503,6 +50498,327 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-f2b6376c", module.exports)
   }
 }
+
+/***/ }),
+/* 70 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(71)
+/* template */
+var __vue_template__ = __webpack_require__(72)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/js/components/Admin.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-58b78718", Component.options)
+  } else {
+    hotAPI.reload("data-v-58b78718", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 71 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(18);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+	created: function created() {},
+	mounted: function mounted() {
+		console.log('Admin mounted.');
+	}
+});
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { attrs: { id: "admin" } }, [_vm._v("\n    Admin\n")])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-58b78718", module.exports)
+  }
+}
+
+/***/ }),
+/* 73 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Admin__ = __webpack_require__(70);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Admin___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Admin__);
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+	basePath: "admin",
+	routes: [{ path: '/admin', component: __WEBPACK_IMPORTED_MODULE_0__components_Admin___default.a }],
+	plugins: []
+});
+
+/***/ }),
+/* 74 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Home__ = __webpack_require__(65);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Home___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Home__);
+
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+	basePath: "",
+	routes: [{ path: "/", component: __WEBPACK_IMPORTED_MODULE_0__components_Home___default.a }],
+	plugins: []
+});
+
+/***/ }),
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(37);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(40);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+
+var _class = function () {
+
+	/**
+  * @param siteConfigurations
+  */
+	function _class(siteConfigurations) {
+		_classCallCheck(this, _class);
+
+		this.siteConfigurations = siteConfigurations;
+		this.app = {};
+	}
+
+	/**
+  * Run to setup the Vue object
+  *
+  * @param globalPlugins
+  * @param el
+  */
+
+
+	_createClass(_class, [{
+		key: "setup",
+		value: function setup(globalPlugins, el) {
+			// Get combined items
+			var _getSiteConfiguration = this.getSiteConfigurationDetails(globalPlugins),
+			    routes = _getSiteConfiguration.routes,
+			    plugins = _getSiteConfiguration.plugins;
+
+			// Get router
+
+
+			var router = this.getRouter(routes);
+
+			// Setup the plugins on Vue
+			this.setupPlugins(plugins);
+
+			// Create the Vue object
+			this.app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
+				el: el,
+				router: router
+			});
+		}
+
+		/**
+   * Based on passed in routes, get the VueRouter object
+   *
+   * @param routes
+   * @returns {VueRouter}
+   */
+
+	}, {
+		key: "getRouter",
+		value: function getRouter(routes) {
+			return new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({
+				mode: 'history',
+				routes: routes
+			});
+		}
+
+		/**
+   * Setup the plugins on Vue
+   *
+   * @param plugins
+   */
+
+	}, {
+		key: "setupPlugins",
+		value: function setupPlugins(plugins) {
+			// Setup Plugins
+			plugins.forEach(function (plugin) {
+				__WEBPACK_IMPORTED_MODULE_0_vue___default.a.use(plugin.def, plugin.options);
+			});
+		}
+
+		/**
+   * @param globalPlugins
+   * @returns {{routes: Array, plugins: *}}
+   */
+
+	}, {
+		key: "getSiteConfigurationDetails",
+		value: function getSiteConfigurationDetails(globalPlugins) {
+			var _this = this;
+
+			var plugins = globalPlugins;
+			var routes = [];
+			var otherPathMatched = false;
+
+			var path = window.location.pathname;
+
+			this.siteConfigurations.other.forEach(function (configuration) {
+				if (_this.checkPathContainsBasePath(path, configuration.basePath)) {
+					otherPathMatched = true;
+
+					var _combineConfiguration = _this.combineConfigurationDetailsWithGlobal(routes, plugins, configuration);
+
+					routes = _combineConfiguration.routes;
+					plugins = _combineConfiguration.plugins;
+				}
+			});
+
+			if (!otherPathMatched) {
+				var _combineConfiguration2 = this.combineConfigurationDetailsWithGlobal(routes, plugins, this.siteConfigurations.default);
+
+				routes = _combineConfiguration2.routes;
+				plugins = _combineConfiguration2.plugins;
+			}
+
+			return { routes: routes, plugins: plugins };
+		}
+
+		/**
+   * @param globalRoutes
+   * @param globalPlugins
+   * @param configuration
+   * @returns {{routes: (Array|Buffer|*|T[]|string), plugins: (Array|Buffer|*|T[]|string)}}
+   */
+
+	}, {
+		key: "combineConfigurationDetailsWithGlobal",
+		value: function combineConfigurationDetailsWithGlobal(globalRoutes, globalPlugins, configuration) {
+			var routes = globalRoutes.concat(configuration.routes);
+			var plugins = globalPlugins.concat(configuration.plugins);
+
+			return { routes: routes, plugins: plugins };
+		}
+
+		/**
+   * @param path
+   * @param basePath
+   * @returns {boolean}
+   */
+
+	}, {
+		key: "checkPathContainsBasePath",
+		value: function checkPathContainsBasePath(path, basePath) {
+			if (!path) return;
+
+			return path.split("/").splice(1)[0] === basePath;
+		}
+
+		/**
+   * @returns {*}
+   */
+
+	}, {
+		key: "siteConfigurations",
+		get: function get() {
+			return this._siteConfigurations;
+		}
+
+		/**
+   * @param value
+   */
+		,
+		set: function set(value) {
+			this._siteConfigurations = value;
+		}
+
+		/**
+   * @returns {Vue}
+   */
+
+	}, {
+		key: "app",
+		get: function get() {
+			return this._app;
+		}
+
+		/**
+   * @param {Vue} value
+   */
+		,
+		set: function set(value) {
+			this._app = value;
+		}
+	}]);
+
+	return _class;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = (_class);
 
 /***/ })
 /******/ ]);

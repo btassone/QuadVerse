@@ -7,23 +7,19 @@
 
 require('./bootstrap');
 
-import Vue from "vue";
 import VueRouter from "vue-router";
+import adminConfig from "./setup/AdminConfiguration";
+import homeConfig from "./setup/HomeConfiguration";
+import QuadVerseSite from "./setup/Site";
 
-import Home from "./components/Home";
-
-let routes = [
-	{ path: '/', component: Home }
+let globalPlugins = [
+	{ def: VueRouter, options: {} }
 ];
 
-const router = new VueRouter({
-	mode: 'history',
-	routes
-});
+let siteConfigurations = {
+	default: homeConfig,
+	other: [adminConfig]
+};
 
-Vue.use(VueRouter);
-
-const app = new Vue({
-    el: '#site',
-	router
-});
+let quadVerseSite = new QuadVerseSite(siteConfigurations);
+quadVerseSite.setup(globalPlugins, '#site');
