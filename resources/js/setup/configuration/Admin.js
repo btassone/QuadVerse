@@ -46,6 +46,10 @@ export default {
 					]
 				}
 			]
+		},
+		{
+			path :'*',
+			redirect: '/admin/dashboard'
 		}
 	],
 	plugins: [
