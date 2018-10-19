@@ -40748,6 +40748,7 @@ var _class = function () {
 		_classCallCheck(this, _class);
 
 		this.app = null;
+		this.authentication = null;
 		this.context = "";
 		this.globalPlugins = [{ def: __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */], options: {} }];
 		this.root = '#site';
@@ -40789,11 +40790,11 @@ var _class = function () {
 			// The authentication middleware
 			this.createAuthMiddleware(router, this.authentication);
 
-			// Add authentication object to the Vue prototype
-			__WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$authentication = this.authentication;
-
 			// Setup the plugins on Vue
 			this.setupPlugins(plugins);
+
+			// Add authentication object to the Vue prototype
+			__WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$authentication = this.authentication;
 
 			// Create the Vue object
 			this.app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
@@ -40920,24 +40921,6 @@ var _class = function () {
 		}
 
 		/**
-   * @returns {*}
-   */
-
-	}, {
-		key: "siteConfigurations",
-		get: function get() {
-			return this._siteConfigurations;
-		}
-
-		/**
-   * @param value
-   */
-		,
-		set: function set(value) {
-			this._siteConfigurations = value;
-		}
-
-		/**
    * @returns {Vue}
    */
 
@@ -40954,37 +40937,95 @@ var _class = function () {
 		set: function set(value) {
 			this._app = value;
 		}
-	}, {
-		key: "globalPlugins",
-		get: function get() {
-			return this._globalPlugins;
-		},
-		set: function set(value) {
-			this._globalPlugins = value;
-		}
-	}, {
-		key: "root",
-		get: function get() {
-			return this._root;
-		},
-		set: function set(value) {
-			this._root = value;
-		}
-	}, {
-		key: "context",
-		get: function get() {
-			return this._context;
-		},
-		set: function set(value) {
-			this._context = value;
-		}
+
+		/**
+   * @returns {*}
+   */
+
 	}, {
 		key: "authentication",
 		get: function get() {
 			return this._authentication;
-		},
+		}
+
+		/**
+   * @param value
+   */
+		,
 		set: function set(value) {
 			this._authentication = value;
+		}
+
+		/**
+   * @returns {*}
+   */
+
+	}, {
+		key: "context",
+		get: function get() {
+			return this._context;
+		}
+
+		/**
+   * @param value
+   */
+		,
+		set: function set(value) {
+			this._context = value;
+		}
+
+		/**
+   * @returns {*}
+   */
+
+	}, {
+		key: "globalPlugins",
+		get: function get() {
+			return this._globalPlugins;
+		}
+
+		/**
+   * @param value
+   */
+		,
+		set: function set(value) {
+			this._globalPlugins = value;
+		}
+
+		/**
+   * @returns {*}
+   */
+
+	}, {
+		key: "root",
+		get: function get() {
+			return this._root;
+		}
+
+		/**
+   * @param value
+   */
+		,
+		set: function set(value) {
+			this._root = value;
+		}
+
+		/**
+   * @returns {*}
+   */
+
+	}, {
+		key: "siteConfigurations",
+		get: function get() {
+			return this._siteConfigurations;
+		}
+
+		/**
+   * @param value
+   */
+		,
+		set: function set(value) {
+			this._siteConfigurations = value;
 		}
 	}]);
 

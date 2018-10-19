@@ -17,6 +17,7 @@ export default class {
 	 */
 	constructor() {
 		this.app = null;
+		this.authentication = null;
 		this.context = "";
 		this.globalPlugins = [
 			{ def: VueRouter, options: {} }
@@ -50,11 +51,11 @@ export default class {
 		// The authentication middleware
 		this.createAuthMiddleware(router, this.authentication);
 
-		// Add authentication object to the Vue prototype
-		Vue.prototype.$authentication = this.authentication;
-
 		// Setup the plugins on Vue
 		this.setupPlugins(plugins);
+
+		// Add authentication object to the Vue prototype
+		Vue.prototype.$authentication = this.authentication;
 
 		// Create the Vue object
 		this.app = new Vue({
@@ -155,20 +156,6 @@ export default class {
 	}
 
 	/**
-	 * @returns {*}
-	 */
-	get siteConfigurations() {
-		return this._siteConfigurations;
-	}
-
-	/**
-	 * @param value
-	 */
-	set siteConfigurations(value) {
-		this._siteConfigurations = value;
-	}
-
-	/**
 	 * @returns {Vue}
 	 */
 	get app() {
@@ -182,35 +169,73 @@ export default class {
 		this._app = value;
 	}
 
-	get globalPlugins() {
-		return this._globalPlugins;
-	}
-
-	set globalPlugins(value) {
-		this._globalPlugins = value;
-	}
-
-	get root() {
-		return this._root;
-	}
-
-	set root(value) {
-		this._root = value;
-	}
-
-	get context() {
-		return this._context;
-	}
-
-	set context(value) {
-		this._context = value;
-	}
-
+	/**
+	 * @returns {*}
+	 */
 	get authentication() {
 		return this._authentication;
 	}
 
+	/**
+	 * @param value
+	 */
 	set authentication(value) {
 		this._authentication = value;
+	}
+
+	/**
+	 * @returns {*}
+	 */
+	get context() {
+		return this._context;
+	}
+
+	/**
+	 * @param value
+	 */
+	set context(value) {
+		this._context = value;
+	}
+
+	/**
+	 * @returns {*}
+	 */
+	get globalPlugins() {
+		return this._globalPlugins;
+	}
+
+	/**
+	 * @param value
+	 */
+	set globalPlugins(value) {
+		this._globalPlugins = value;
+	}
+
+	/**
+	 * @returns {*}
+	 */
+	get root() {
+		return this._root;
+	}
+
+	/**
+	 * @param value
+	 */
+	set root(value) {
+		this._root = value;
+	}
+
+	/**
+	 * @returns {*}
+	 */
+	get siteConfigurations() {
+		return this._siteConfigurations;
+	}
+
+	/**
+	 * @param value
+	 */
+	set siteConfigurations(value) {
+		this._siteConfigurations = value;
 	}
 }
