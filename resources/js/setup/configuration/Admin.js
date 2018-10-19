@@ -1,6 +1,6 @@
 import BootstrapVue from 'bootstrap-vue'
 import Admin from "../../components/Admin";
-import Login from "../../components/admin/access/Login";
+import Login from "../../components/admin/pages/Login";
 import Dashboard from "../../components/admin/Dashboard";
 import DefaultContainer from "../../components/admin/containers/DefaultContainer";
 
@@ -41,7 +41,7 @@ export default {
 						{
 							path: '',
 							name: 'Dashboard',
-							component: DefaultContainer
+							component: DefaultContainer,
 						},
 					]
 				}
