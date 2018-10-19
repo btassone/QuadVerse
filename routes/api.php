@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,9 +14,22 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::post('login', 'AuthController@login');
-Route::post('register', 'AuthController@register');
+/**
+ * Version 1.0 API
+ */
+Route::group([ 'prefix' => 'v1' ], function() {
 
-Route::middleware('auth:api')->group(function () {
-	Route::get('logout', 'AuthController@logout');
+	// Authentication Routes
+	Route::group([ 'prefix' => 'auth' ], function() {
+		// Unauthenticated
+		Route::post('login', 'AuthController@login');
+		Route::post('register', 'AuthController@register');
+		Route::get('refresh', 'AuthController@refresh');
+
+		// Authenticated
+		Route::middleware('auth:api')->group(function () {
+			Route::get('logout', 'AuthController@logout');
+			Route::get('user', 'AuthController@user');
+		});
+	});
 });

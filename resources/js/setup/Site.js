@@ -1,5 +1,10 @@
+// Vue
 import Vue from "vue";
 import VueRouter from "vue-router";
+
+// Listeners
+import authRouterListener from "../listeners/AuthRouterListener";
+import Authentication from "./Authentication";
 
 export default class {
 
@@ -8,7 +13,19 @@ export default class {
 	 */
 	constructor(siteConfigurations) {
 		this.siteConfigurations = siteConfigurations;
-		this.app = {};
+		this.app = null;
+		this.context = "";
+	}
+
+	/**
+	 * Register global event listeners
+	 */
+	eventListeners() {
+		window.addEventListener("register-global-event-listeners", () => {
+			window.addEventListener("site-router", authRouterListener);
+		});
+
+		window.dispatchEvent(new CustomEvent("register-global-event-listeners"))
 	}
 
 	/**
@@ -18,11 +35,21 @@ export default class {
 	 * @param el
 	 */
 	setup(globalPlugins, el) {
+
 		// Get combined items
-		let { routes, plugins } = this.getSiteConfigurationDetails(globalPlugins);
+		let { routes, plugins, context, authPaths } = this.getSiteConfigurationDetails(globalPlugins);
 
 		// Get router
 		let router = this.getRouter(routes);
+
+		this.context = context;
+
+		this.authentication = new Authentication(router, authPaths);
+
+		window.dispatchEvent(new CustomEvent("site-router", { detail: {
+			router: router,
+			auth: this.authentication
+		}}));
 
 		// Setup the plugins on Vue
 		this.setupPlugins(plugins);
@@ -66,6 +93,8 @@ export default class {
 	getSiteConfigurationDetails(globalPlugins) {
 		let plugins = globalPlugins;
 		let routes = [];
+		let context = "";
+		let authPaths = null;
 		let otherPathMatched = false;
 
 		const path = window.location.pathname;
@@ -73,15 +102,21 @@ export default class {
 		this.siteConfigurations.other.forEach(configuration => {
 			if(this.checkPathContainsBasePath(path, configuration.basePath)) {
 				otherPathMatched = true;
+				context = configuration.context;
+				authPaths = configuration.authPaths;
+
 				({routes, plugins} = this.combineConfigurationDetailsWithGlobal(routes, plugins, configuration));
 			}
 		});
 
 		if(!otherPathMatched) {
+			context = this.siteConfigurations.default.context;
+			authPaths = this.siteConfigurations.default.authPaths;
+
 			({routes, plugins} = this.combineConfigurationDetailsWithGlobal(routes, plugins, this.siteConfigurations.default));
 		}
 
-		return { routes, plugins };
+		return { routes, plugins, context, authPaths };
 	}
 
 	/**
@@ -103,7 +138,7 @@ export default class {
 	 * @returns {boolean}
 	 */
 	checkPathContainsBasePath(path, basePath) {
-		if(!path) return;
+		if(!path) return false;
 
 		return path.split("/").splice(1)[0] === basePath;
 	}
@@ -134,5 +169,21 @@ export default class {
 	 */
 	set app(value) {
 		this._app = value;
+	}
+
+	get context() {
+		return this._context;
+	}
+
+	set context(value) {
+		this._context = value;
+	}
+
+	get authentication() {
+		return this._authentication;
+	}
+
+	set authentication(value) {
+		this._authentication = value;
 	}
 }

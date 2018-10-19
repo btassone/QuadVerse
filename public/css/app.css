@@ -614,7 +614,8 @@ pre code {
   }
 }
 
-.container-fluid {
+.container-fluid,
+#admin.is-login .router-view-wrap {
   width: 100%;
   padding-right: 15px;
   padding-left: 15px;
@@ -4619,7 +4620,8 @@ input[type="button"].btn-block {
 }
 
 .navbar > .container,
-.navbar > .container-fluid {
+.navbar > .container-fluid,
+#admin.is-login .navbar > .router-view-wrap {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -4718,7 +4720,8 @@ input[type="button"].btn-block {
 
 @media (max-width: 575.98px) {
   .navbar-expand-sm > .container,
-  .navbar-expand-sm > .container-fluid {
+  .navbar-expand-sm > .container-fluid,
+  #admin.is-login .navbar-expand-sm > .router-view-wrap {
     padding-right: 0;
     padding-left: 0;
   }
@@ -4752,7 +4755,8 @@ input[type="button"].btn-block {
   }
 
   .navbar-expand-sm > .container,
-  .navbar-expand-sm > .container-fluid {
+  .navbar-expand-sm > .container-fluid,
+  #admin.is-login .navbar-expand-sm > .router-view-wrap {
     -ms-flex-wrap: nowrap;
         flex-wrap: nowrap;
   }
@@ -4772,7 +4776,8 @@ input[type="button"].btn-block {
 
 @media (max-width: 767.98px) {
   .navbar-expand-md > .container,
-  .navbar-expand-md > .container-fluid {
+  .navbar-expand-md > .container-fluid,
+  #admin.is-login .navbar-expand-md > .router-view-wrap {
     padding-right: 0;
     padding-left: 0;
   }
@@ -4806,7 +4811,8 @@ input[type="button"].btn-block {
   }
 
   .navbar-expand-md > .container,
-  .navbar-expand-md > .container-fluid {
+  .navbar-expand-md > .container-fluid,
+  #admin.is-login .navbar-expand-md > .router-view-wrap {
     -ms-flex-wrap: nowrap;
         flex-wrap: nowrap;
   }
@@ -4826,7 +4832,8 @@ input[type="button"].btn-block {
 
 @media (max-width: 991.98px) {
   .navbar-expand-lg > .container,
-  .navbar-expand-lg > .container-fluid {
+  .navbar-expand-lg > .container-fluid,
+  #admin.is-login .navbar-expand-lg > .router-view-wrap {
     padding-right: 0;
     padding-left: 0;
   }
@@ -4860,7 +4867,8 @@ input[type="button"].btn-block {
   }
 
   .navbar-expand-lg > .container,
-  .navbar-expand-lg > .container-fluid {
+  .navbar-expand-lg > .container-fluid,
+  #admin.is-login .navbar-expand-lg > .router-view-wrap {
     -ms-flex-wrap: nowrap;
         flex-wrap: nowrap;
   }
@@ -4880,7 +4888,8 @@ input[type="button"].btn-block {
 
 @media (max-width: 1199.98px) {
   .navbar-expand-xl > .container,
-  .navbar-expand-xl > .container-fluid {
+  .navbar-expand-xl > .container-fluid,
+  #admin.is-login .navbar-expand-xl > .router-view-wrap {
     padding-right: 0;
     padding-left: 0;
   }
@@ -4914,7 +4923,8 @@ input[type="button"].btn-block {
   }
 
   .navbar-expand-xl > .container,
-  .navbar-expand-xl > .container-fluid {
+  .navbar-expand-xl > .container-fluid,
+  #admin.is-login .navbar-expand-xl > .router-view-wrap {
     -ms-flex-wrap: nowrap;
         flex-wrap: nowrap;
   }
@@ -4943,7 +4953,8 @@ input[type="button"].btn-block {
 }
 
 .navbar-expand > .container,
-.navbar-expand > .container-fluid {
+.navbar-expand > .container-fluid,
+#admin.is-login .navbar-expand > .router-view-wrap {
   padding-right: 0;
   padding-left: 0;
 }
@@ -4965,7 +4976,8 @@ input[type="button"].btn-block {
 }
 
 .navbar-expand > .container,
-.navbar-expand > .container-fluid {
+.navbar-expand > .container-fluid,
+#admin.is-login .navbar-expand > .router-view-wrap {
   -ms-flex-wrap: nowrap;
       flex-wrap: nowrap;
 }
@@ -7151,7 +7163,8 @@ button.bg-dark:focus {
   display: table-cell !important;
 }
 
-.d-flex {
+.d-flex,
+#admin.is-login {
   display: -webkit-box !important;
   display: -ms-flexbox !important;
   display: flex !important;
@@ -7499,7 +7512,8 @@ button.bg-dark:focus {
           justify-content: flex-end !important;
 }
 
-.justify-content-center {
+.justify-content-center,
+#admin.is-login {
   -webkit-box-pack: center !important;
       -ms-flex-pack: center !important;
           justify-content: center !important;
@@ -7528,7 +7542,8 @@ button.bg-dark:focus {
           align-items: flex-end !important;
 }
 
-.align-items-center {
+.align-items-center,
+#admin.is-login {
   -webkit-box-align: center !important;
       -ms-flex-align: center !important;
           align-items: center !important;
@@ -15716,5 +15731,15 @@ readers do not read off random characters that represent icons */
   background-color: #fff;
   -webkit-box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
           box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+#admin.is-login {
+  height: 100vh;
+  width: 100vw;
+}
+
+#admin.is-login .router-view-wrap {
+  max-width: 400px;
+  width: 100%;
 }
 

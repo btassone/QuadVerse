@@ -2,12 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 
 class AuthController extends Controller
 {
-	private $appTokenName = "QuadVerse";
-
+	/**
+	 * @param Request $request
+	 *
+	 * @return array|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Illuminate\Validation\ValidationException
+	 */
     public function register(Request $request) {
     	$this->validate($request, [
     		'name' => 'required|min:3',
@@ -21,32 +28,111 @@ class AuthController extends Controller
 			'password' => bcrypt($request->password)
 		]);
 
-    	$token = $user->createToken($this->appTokenName)->accessToken;
-
-    	return response()->json(['token' => $token], 200);
+    	return $this->proxy('password', [
+    		"username" => $user->email,
+			"password" => $user->password
+		]);
 	}
 
+	/**
+	 * @param Request $request
+	 *
+	 * @return array|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Illuminate\Validation\ValidationException
+	 */
 	public function login(Request $request) {
-    	$status = 401;
+
+    	$this->validate($request, [
+    		'email' => 'required',
+			'password' => 'required'
+		]);
+
     	$credentials = [
-    		'email' => $request->email,
+    		'username' => $request->email,
 			'password' => $request->password
 		];
 
-    	if(auth()->attempt($credentials)) {
-    		$token = auth()->user()->createToken($this->appTokenName)->accessToken;
-    		$response = ['token' => $token];
-    		$status = 200;
-		} else {
-    		$response = ['error', 'Unauthorized'];
-		}
-
-		return response()->json($response, $status);
+    	return $this->proxy('password', $credentials);
 	}
 
+	/**
+	 * @param Request $request
+	 */
 	public function logout(Request $request) {
-		$request->user()->token()->revoke();
+		$accessToken = $request->user()->token();
 
-		return response()->json(['message' => 'Successfully logged out'], 200);
+		DB::table('oauth_refresh_tokens')
+			->where('access_token_id', $accessToken->id)
+			->update([
+				'revoked' => true
+			]);
+
+		$accessToken->revoke();
+
+		Cookie::queue(Cookie::forget('refresh_token'));
+	}
+
+	/**
+	 * @param Request $request
+	 *
+	 * @return mixed
+	 */
+	public function user(Request $request) {
+    	return $request->user();
+	}
+
+	/**
+	 * @param Request $request
+	 *
+	 * @throws
+	 * @return array|\Symfony\Component\HttpFoundation\Response
+	 */
+	public function refresh(Request $request) {
+    	$refreshToken = $request->cookie('refresh_token');
+
+    	return $this->proxy('refresh_token', [
+    		'refresh_token' => $refreshToken
+		]);
+	}
+
+	/**
+	 * @param $grantType
+	 * @param $data
+	 *
+	 * @return array|\Symfony\Component\HttpFoundation\Response
+	 * @throws \Exception
+	 */
+	public function proxy($grantType, $data) {
+
+		$data = array_merge($data, [
+			'client_id'     => env('PASSWORD_CLIENT_ID'),
+			'client_secret' => env('PASSWORD_CLIENT_SECRET'),
+			'grant_type'    => $grantType
+		]);
+
+		$request = Request::create('/oauth/token', 'POST', $data);
+		$response = app()->handle($request);
+
+		if($response->getStatusCode() != 200) {
+			return $response;
+		}
+
+		$data = json_decode($response->getContent());
+
+		// Create a refresh token cookie
+		Cookie::queue(
+			'refresh_token',
+			$data->refresh_token,
+			864000, // 10 days
+			null,
+			null,
+			false,
+			true // HttpOnly
+		);
+
+		return [
+			'access_token' => $data->access_token,
+			'expires_in' => $data->expires_in
+		];
 	}
 }
