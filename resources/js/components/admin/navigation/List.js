@@ -1,6 +1,11 @@
 export default {
 	items: [
 		{
+			name: 'Dashboard',
+			url: '/admin/dashboard',
+			icon: 'icon-speedometer',
+		},
+		{
 			title: true,
 			name: 'User',
 			class: '',
