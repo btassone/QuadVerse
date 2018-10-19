@@ -5,7 +5,7 @@
 	export default {
 		methods: {
 			logout() {
-				quadVerseSite.authentication.logOut();
+				this.$authentication.logOut();
             }
         },
 		created() {

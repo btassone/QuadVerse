@@ -31,6 +31,3 @@ quadVerseSite.eventListeners();
 
 // Sets up the site and creates the VueRouter and Vue object
 quadVerseSite.setup(globalPlugins, '#site');
-
-// Add the QuadVerseSite object to window
-window.quadVerseSite = quadVerseSite;

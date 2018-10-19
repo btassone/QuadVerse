@@ -51,6 +51,8 @@ export default class {
 			auth: this.authentication
 		}}));
 
+		Vue.prototype.$authentication = this.authentication;
+
 		// Setup the plugins on Vue
 		this.setupPlugins(plugins);
 

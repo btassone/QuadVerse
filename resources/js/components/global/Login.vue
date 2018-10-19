@@ -45,7 +45,7 @@
         },
         methods: {
 		    login() {
-                quadVerseSite.authentication.logIn(this.form);
+                this.$authentication.logIn(this.form);
             }
         },
 		created() {

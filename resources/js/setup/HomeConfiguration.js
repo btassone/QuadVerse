@@ -10,7 +10,7 @@ export default {
 	authPaths: AppAuthPaths,
 	basePath: "",
 	routes: [
-		{ path: "/", component: Home }
+		{ path: "/", component: Home, name: "home", meta: { authentication: false } }
 	],
 	plugins: []
 }

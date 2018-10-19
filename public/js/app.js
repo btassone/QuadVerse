@@ -17962,9 +17962,6 @@ quadVerseSite.eventListeners();
 // Sets up the site and creates the VueRouter and Vue object
 quadVerseSite.setup(globalPlugins, '#site');
 
-// Add the QuadVerseSite object to window
-window.quadVerseSite = quadVerseSite;
-
 /***/ }),
 /* 19 */
 /***/ (function(module, exports, __webpack_require__) {
@@ -40333,7 +40330,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 	},
 	methods: {
 		login: function login() {
-			quadVerseSite.authentication.logIn(this.form);
+			this.$authentication.logIn(this.form);
 		}
 	},
 	created: function created() {
@@ -40594,7 +40591,7 @@ var AppAuthPaths = {
 	context: "App",
 	authPaths: AppAuthPaths,
 	basePath: "",
-	routes: [{ path: "/", component: __WEBPACK_IMPORTED_MODULE_0__components_Home___default.a }],
+	routes: [{ path: "/", component: __WEBPACK_IMPORTED_MODULE_0__components_Home___default.a, name: "home", meta: { authentication: false } }],
 	plugins: []
 });
 
@@ -40883,6 +40880,8 @@ var _class = function () {
 					router: router,
 					auth: this.authentication
 				} }));
+
+			__WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$authentication = this.authentication;
 
 			// Setup the plugins on Vue
 			this.setupPlugins(plugins);
@@ -52366,7 +52365,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony default export */ __webpack_exports__["default"] = ({
 	methods: {
 		logout: function logout() {
-			quadVerseSite.authentication.logOut();
+			this.$authentication.logOut();
 		}
 	},
 	created: function created() {},
@@ -52416,26 +52415,23 @@ if (false) {
 	var auth = detail.auth;
 
 	router.beforeEach(function (to, from, next) {
+
 		if (to.matched.some(function (record) {
 			return record.meta.authentication;
 		})) {
+
 			auth.loggedIn().then(function (loggedIn) {
-				if (!loggedIn) {
-					next(auth.authPaths.logout);
-				} else {
-					next();
-				}
+				return !loggedIn ? next(auth.authPaths.logout) : next();
 			});
 		} else {
+
 			if (to.name === auth.authPaths.logout.name) {
+
 				auth.loggedIn().then(function (loggedIn) {
-					if (loggedIn) {
-						next(auth.authPaths.login);
-					} else {
-						next();
-					}
+					return loggedIn ? next(auth.authPaths.login) : next();
 				});
 			} else {
+
 				next();
 			}
 		}
@@ -52467,9 +52463,17 @@ var Authentication = function () {
 
 		this.authType = "Bearer";
 		this.authPaths = authPaths;
-		this.storageName = "access_token";
 		this.router = router;
+		this.accessToken = "";
 	}
+
+	/**
+  * Find out if the user is logged in or not. If the access token is expired (doesn't work) it will try to use the
+  * refresh token. If the refresh token is still good it will reset the access token and return true.
+  *
+  * @returns {Promise<boolean>}
+  */
+
 
 	_createClass(Authentication, [{
 		key: "loggedIn",
@@ -52483,13 +52487,7 @@ var Authentication = function () {
 						switch (_context.prev = _context.next) {
 							case 0:
 								loggedIn = false;
-
-								if (!this.accessToken) {
-									_context.next = 4;
-									break;
-								}
-
-								_context.next = 4;
+								_context.next = 3;
 								return __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get("/api/v1/auth/user", this.headers())
 								// If it is still good, send them to the dashboard
 								.then(function () {
@@ -52502,10 +52500,10 @@ var Authentication = function () {
 									});
 								});
 
-							case 4:
+							case 3:
 								return _context.abrupt("return", loggedIn);
 
-							case 5:
+							case 4:
 							case "end":
 								return _context.stop();
 						}
@@ -52519,47 +52517,11 @@ var Authentication = function () {
 
 			return loggedIn;
 		}()
-
-		/**
-   * Accepts a vform as a parameter. Preferably the login form.
-   *
-   * @param form
-   */
-
-	}, {
-		key: "logIn",
-		value: function logIn(form) {
-			var _this2 = this;
-
-			form.post("/api/v1/auth/login").then(function (_ref2) {
-				var data = _ref2.data;
-
-				_this2.accessToken = data.access_token;
-
-				_this2.goOnAuthentication();
-			});
-		}
-
-		/**
-   * Logs the user out
-   */
-
-	}, {
-		key: "logOut",
-		value: function logOut() {
-			var _this3 = this;
-
-			__WEBPACK_IMPORTED_MODULE_1_axios___default.a.get("/api/v1/auth/logout", this.headers()).then(function () {
-				_this3.removeAccessToken();
-
-				_this3.goOnUnauthorized();
-			});
-		}
 	}, {
 		key: "refresh",
 		value: function () {
-			var _ref3 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2() {
-				var _this4 = this;
+			var _ref2 = _asyncToGenerator( /*#__PURE__*/__WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.mark(function _callee2() {
+				var _this2 = this;
 
 				var loggedIn;
 				return __WEBPACK_IMPORTED_MODULE_0_babel_runtime_regenerator___default.a.wrap(function _callee2$(_context2) {
@@ -52570,14 +52532,16 @@ var Authentication = function () {
 								_context2.next = 3;
 								return __WEBPACK_IMPORTED_MODULE_1_axios___default.a.get("/api/v1/auth/refresh")
 								// Token is good. Pass them to the dashboard
-								.then(function (_ref4) {
-									var data = _ref4.data;
+								.then(function (_ref3) {
+									var data = _ref3.data;
 
-									_this4.accessToken = data.access_token;
+									_this2.accessToken = data.access_token;
 
 									loggedIn = true;
 								}).catch(function () {
-									return loggedIn = false;
+									_this2.removeAccessToken();
+
+									loggedIn = false;
 								});
 
 							case 3:
@@ -52592,11 +52556,47 @@ var Authentication = function () {
 			}));
 
 			function refresh() {
-				return _ref3.apply(this, arguments);
+				return _ref2.apply(this, arguments);
 			}
 
 			return refresh;
 		}()
+
+		/**
+   * Accepts a vform as a parameter. Preferably the login form.
+   *
+   * @param form
+   */
+
+	}, {
+		key: "logIn",
+		value: function logIn(form) {
+			var _this3 = this;
+
+			form.post("/api/v1/auth/login").then(function (_ref4) {
+				var data = _ref4.data;
+
+				_this3.accessToken = data.access_token;
+
+				_this3.goOnAuthentication();
+			});
+		}
+
+		/**
+   * Logs the user out
+   */
+
+	}, {
+		key: "logOut",
+		value: function logOut() {
+			var _this4 = this;
+
+			__WEBPACK_IMPORTED_MODULE_1_axios___default.a.get("/api/v1/auth/logout", this.headers()).then(function () {
+				_this4.removeAccessToken();
+
+				_this4.goOnUnauthorized();
+			});
+		}
 	}, {
 		key: "headers",
 		value: function headers() {
@@ -52615,7 +52615,7 @@ var Authentication = function () {
 	}, {
 		key: "removeAccessToken",
 		value: function removeAccessToken() {
-			localStorage.removeItem(this.storageName);
+			this.accessToken = "";
 		}
 	}, {
 		key: "authType",
@@ -52652,10 +52652,10 @@ var Authentication = function () {
 	}, {
 		key: "accessToken",
 		get: function get() {
-			return localStorage.getItem(this.storageName);
+			return this._accessToken;
 		},
 		set: function set(value) {
-			localStorage.setItem(this.storageName, value);
+			this._accessToken = value;
 		}
 	}]);
 
