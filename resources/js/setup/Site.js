@@ -18,17 +18,6 @@ export default class {
 	}
 
 	/**
-	 * Register global event listeners
-	 */
-	eventListeners() {
-		window.addEventListener("register-global-event-listeners", () => {
-			window.addEventListener("site-router", authRouterListener);
-		});
-
-		window.dispatchEvent(new CustomEvent("register-global-event-listeners"))
-	}
-
-	/**
 	 * Run to setup the Vue object
 	 *
 	 * @param globalPlugins
@@ -46,10 +35,7 @@ export default class {
 
 		this.authentication = new Authentication(router, authPaths);
 
-		window.dispatchEvent(new CustomEvent("site-router", { detail: {
-			router: router,
-			auth: this.authentication
-		}}));
+		this.createAuthMiddleware(router, this.authentication);
 
 		Vue.prototype.$authentication = this.authentication;
 
@@ -61,6 +47,15 @@ export default class {
 			el: el,
 			router
 		});
+	}
+
+	/**
+	 * @param {VueRouter} router
+	 * @param {Authentication} auth
+	 */
+	createAuthMiddleware(router, auth) {
+		// Setup the beforeEach action on the router for authentication. Looks for meta key: authentication
+		authRouterListener(router, auth);
 	}
 
 	/**

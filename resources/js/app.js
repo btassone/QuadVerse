@@ -26,8 +26,5 @@ let siteConfigurations = {
 // Creates the site object and sets all the required variables
 let quadVerseSite = new QuadVerseSite(siteConfigurations);
 
-// Run the global event for event listeners. Good spot to attach listeners for the whole site
-quadVerseSite.eventListeners();
-
 // Sets up the site and creates the VueRouter and Vue object
 quadVerseSite.setup(globalPlugins, '#site');

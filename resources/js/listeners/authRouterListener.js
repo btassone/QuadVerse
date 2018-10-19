@@ -1,7 +1,4 @@
-export default function ({ detail }) {
-	let router = detail.router;
-	let auth = detail.auth;
-
+export default function (router, auth) {
 	router.beforeEach((to, from, next) => {
 
 		if (to.matched.some(record => record.meta.authentication)) {
@@ -17,7 +14,7 @@ export default function ({ detail }) {
 			} else {
 
 				next();
-				
+
 			}
 
 		}

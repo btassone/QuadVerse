@@ -17956,9 +17956,6 @@ var siteConfigurations = {
 // Creates the site object and sets all the required variables
 var quadVerseSite = new __WEBPACK_IMPORTED_MODULE_3__setup_Site__["a" /* default */](siteConfigurations);
 
-// Run the global event for event listeners. Good spot to attach listeners for the whole site
-quadVerseSite.eventListeners();
-
 // Sets up the site and creates the VueRouter and Vue object
 quadVerseSite.setup(globalPlugins, '#site');
 
@@ -40835,28 +40832,14 @@ var _class = function () {
 	}
 
 	/**
-  * Register global event listeners
+  * Run to setup the Vue object
+  *
+  * @param globalPlugins
+  * @param el
   */
 
 
 	_createClass(_class, [{
-		key: "eventListeners",
-		value: function eventListeners() {
-			window.addEventListener("register-global-event-listeners", function () {
-				window.addEventListener("site-router", __WEBPACK_IMPORTED_MODULE_2__listeners_AuthRouterListener__["a" /* default */]);
-			});
-
-			window.dispatchEvent(new CustomEvent("register-global-event-listeners"));
-		}
-
-		/**
-   * Run to setup the Vue object
-   *
-   * @param globalPlugins
-   * @param el
-   */
-
-	}, {
 		key: "setup",
 		value: function setup(globalPlugins, el) {
 
@@ -40876,10 +40859,7 @@ var _class = function () {
 
 			this.authentication = new __WEBPACK_IMPORTED_MODULE_3__Authentication__["a" /* default */](router, authPaths);
 
-			window.dispatchEvent(new CustomEvent("site-router", { detail: {
-					router: router,
-					auth: this.authentication
-				} }));
+			this.createAuthMiddleware(router, this.authentication);
 
 			__WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$authentication = this.authentication;
 
@@ -40891,6 +40871,18 @@ var _class = function () {
 				el: el,
 				router: router
 			});
+		}
+
+		/**
+   * @param {VueRouter} router
+   * @param {Authentication} auth
+   */
+
+	}, {
+		key: "createAuthMiddleware",
+		value: function createAuthMiddleware(router, auth) {
+			// Setup the beforeEach action on the router for authentication. Looks for meta key: authentication
+			Object(__WEBPACK_IMPORTED_MODULE_2__listeners_AuthRouterListener__["a" /* default */])(router, auth);
 		}
 
 		/**
@@ -52408,12 +52400,7 @@ if (false) {
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony default export */ __webpack_exports__["a"] = (function (_ref) {
-	var detail = _ref.detail;
-
-	var router = detail.router;
-	var auth = detail.auth;
-
+/* harmony default export */ __webpack_exports__["a"] = (function (router, auth) {
 	router.beforeEach(function (to, from, next) {
 
 		if (to.matched.some(function (record) {
@@ -52458,6 +52445,11 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 var Authentication = function () {
+
+	/**
+  * @param {VueRouter} router
+  * @param {array} authPaths
+  */
 	function Authentication(router, authPaths) {
 		_classCallCheck(this, Authentication);
 
@@ -52517,6 +52509,15 @@ var Authentication = function () {
 
 			return loggedIn;
 		}()
+
+		/**
+   * If there is a problem getting the user data (means we are either no logged in, or no access token) we call the
+   * refresh route to use the refresh_key http only cookie if available. This will generate a new access key and keep
+   * us essentially logged in.
+   *
+   * @returns {Promise<boolean>}
+   */
+
 	}, {
 		key: "refresh",
 		value: function () {
@@ -52597,63 +52598,133 @@ var Authentication = function () {
 				_this4.goOnUnauthorized();
 			});
 		}
+
+		/**
+   * @returns {{headers: {Authorization: string}}}
+   */
+
 	}, {
 		key: "headers",
 		value: function headers() {
 			return { headers: { Authorization: this.authType + " " + this.accessToken } };
 		}
+
+		/**
+   * Tells the router to go to the page specified on login
+   */
+
 	}, {
 		key: "goOnAuthentication",
 		value: function goOnAuthentication() {
 			this.router.push(this.authPaths.login);
 		}
+
+		/**
+   * Tells the router to go to the page specified on logout
+   */
+
 	}, {
 		key: "goOnUnauthorized",
 		value: function goOnUnauthorized() {
 			this.router.push(this.authPaths.logout);
 		}
+
+		/**
+   * Remove the access token
+   */
+
 	}, {
 		key: "removeAccessToken",
 		value: function removeAccessToken() {
 			this.accessToken = "";
 		}
+
+		/**
+   * @returns {*}
+   */
+
 	}, {
 		key: "authType",
 		get: function get() {
 			return this._authType;
-		},
+		}
+
+		/**
+   * @param value
+   */
+		,
 		set: function set(value) {
 			this._authType = value;
 		}
+
+		/**
+   * @returns {*}
+   */
+
 	}, {
 		key: "authPaths",
 		get: function get() {
 			return this._authPaths;
-		},
+		}
+
+		/**
+   * @param value
+   */
+		,
 		set: function set(value) {
 			this._authPaths = value;
 		}
+
+		/**
+   * @returns {*}
+   */
+
 	}, {
 		key: "storageName",
 		get: function get() {
 			return this._storageName;
-		},
+		}
+
+		/**
+   * @param value
+   */
+		,
 		set: function set(value) {
 			this._storageName = value;
 		}
+
+		/**
+   * @returns {*}
+   */
+
 	}, {
 		key: "router",
 		get: function get() {
 			return this._router;
-		},
+		}
+
+		/**
+   * @param value
+   */
+		,
 		set: function set(value) {
 			this._router = value;
 		}
+
+		/**
+   * @returns {*}
+   */
+
 	}, {
 		key: "accessToken",
 		get: function get() {
 			return this._accessToken;
-		},
+		}
+
+		/**
+   * @param value
+   */
+		,
 		set: function set(value) {
 			this._accessToken = value;
 		}
