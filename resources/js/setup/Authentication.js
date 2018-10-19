@@ -2,6 +2,10 @@ import axios from "axios";
 
 export default class Authentication {
 
+	/**
+	 * @param {VueRouter} router
+	 * @param {array} authPaths
+	 */
 	constructor(router, authPaths) {
 		this.authType = "Bearer";
 		this.authPaths = authPaths;
@@ -29,6 +33,13 @@ export default class Authentication {
 		return loggedIn;
 	}
 
+	/**
+	 * If there is a problem getting the user data (means we are either no logged in, or no access token) we call the
+	 * refresh route to use the refresh_key http only cookie if available. This will generate a new access key and keep
+	 * us essentially logged in.
+	 *
+	 * @returns {Promise<boolean>}
+	 */
 	async refresh() {
 		let loggedIn = false;
 
@@ -74,58 +85,100 @@ export default class Authentication {
 			});
 	}
 
+	/**
+	 * @returns {{headers: {Authorization: string}}}
+	 */
 	headers() {
 		return { headers: { Authorization: `${this.authType} ${this.accessToken}` } }
 	}
 
+	/**
+	 * Tells the router to go to the page specified on login
+	 */
 	goOnAuthentication() {
 		this.router.push(this.authPaths.login);
 	}
 
+	/**
+	 * Tells the router to go to the page specified on logout
+	 */
 	goOnUnauthorized() {
 		this.router.push(this.authPaths.logout);
 	}
 
+	/**
+	 * Remove the access token
+	 */
 	removeAccessToken() {
 		this.accessToken = "";
 	}
 
+	/**
+	 * @returns {*}
+	 */
 	get authType() {
 		return this._authType;
 	}
 
+	/**
+	 * @param value
+	 */
 	set authType(value) {
 		this._authType = value;
 	}
 
+	/**
+	 * @returns {*}
+	 */
 	get authPaths() {
 		return this._authPaths;
 	}
 
+	/**
+	 * @param value
+	 */
 	set authPaths(value) {
 		this._authPaths = value;
 	}
 
+	/**
+	 * @returns {*}
+	 */
 	get storageName() {
 		return this._storageName;
 	}
 
+	/**
+	 * @param value
+	 */
 	set storageName(value) {
 		this._storageName = value;
 	}
 
+	/**
+	 * @returns {*}
+	 */
 	get router() {
 		return this._router;
 	}
 
+	/**
+	 * @param value
+	 */
 	set router(value) {
 		this._router = value;
 	}
 
+	/**
+	 * @returns {*}
+	 */
 	get accessToken() {
 		return this._accessToken;
 	}
 
+	/**
+	 * @param value
+	 */
 	set accessToken(value) {
 		this._accessToken = value;
 	}
