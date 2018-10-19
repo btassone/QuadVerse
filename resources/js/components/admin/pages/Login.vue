@@ -32,15 +32,6 @@
                                 </form>
                             </b-card-body>
                         </b-card>
-                        <b-card no-body class="text-white bg-primary py-5 d-md-down-none" style="width:44%">
-                            <b-card-body class="text-center">
-                                <div>
-                                    <h2>Sign up</h2>
-                                    <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                                    <b-button variant="primary" class="active mt-3">Register Now!</b-button>
-                                </div>
-                            </b-card-body>
-                        </b-card>
                     </b-card-group>
                 </b-col>
             </b-row>
