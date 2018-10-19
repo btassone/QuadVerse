@@ -1,32 +1,37 @@
-// Variables
-@import 'variables';
-
 // Bootstrap
 @import '~bootstrap/scss/bootstrap';
 
-@import "~@fortawesome/fontawesome-free/scss/fontawesome";
-@import "~@fortawesome/fontawesome-free/scss/solid";
-@import "~@fortawesome/fontawesome-free/scss/brands";
+// If you want to override variables do it here
+@import "variables";
 
-.navbar-laravel {
-  background-color: #fff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
-}
+// Import styles
+@import "~@coreui/coreui/scss/coreui";
 
-#admin {
-  &.is-login {
-    @extend .d-flex;
-    @extend .justify-content-center;
-    @extend .align-items-center;
+// If you want to add something do it here
+@import "custom";
 
-    height: 100vh;
-    width: 100vw;
+// ie fixes
+@import "ie-fix";
 
-    .router-view-wrap {
-      @extend .container-fluid;
-
-      max-width: 400px;
-      width: 100%;
-    }
-  }
-}
+//.navbar-laravel {
+//  background-color: #fff;
+//  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+//}
+//
+//#admin {
+//  &.is-login {
+//    @extend .d-flex;
+//    @extend .justify-content-center;
+//    @extend .align-items-center;
+//
+//    height: 100vh;
+//    width: 100vw;
+//
+//    .router-view-wrap {
+//      @extend .container-fluid;
+//
+//      max-width: 400px;
+//      width: 100%;
+//    }
+//  }
+//}

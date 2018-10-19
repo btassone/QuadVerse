@@ -1,17 +1,10 @@
 <template>
-    <div>
-        <div>Dashboard Template</div>
-        <logout></logout>
-    </div>
+    <router-view></router-view>
 </template>
 <script>
 	import axios from "axios";
-	import Logout from "../global/Logout";
 
 	export default {
-		components: {
-            Logout
-        },
 		created() {
 
 		},
