@@ -28,10 +28,7 @@ export default function (router, auth) {
 
 				// Continue to the destination
 				next();
-
 			}
-
 		}
-
 	});
 }

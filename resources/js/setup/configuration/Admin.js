@@ -1,6 +1,6 @@
-import Admin from "../components/Admin";
-import Login from "../components/global/Login";
-import Dashboard from "../components/admin/Dashboard";
+import Admin from "../../components/Admin";
+import Login from "../../components/global/Login";
+import Dashboard from "../../components/admin/Dashboard";
 
 export const AdminAuthPaths = {
 	login: { name: 'adminDashboard' },

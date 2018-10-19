@@ -7,24 +7,7 @@
 require('./bootstrap');
 
 // Site imports
-import VueRouter from "vue-router";
-import adminConfig from "./setup/AdminConfiguration";
-import homeConfig from "./setup/HomeConfiguration";
 import QuadVerseSite from "./setup/Site";
 
-// Plugins
-let globalPlugins = [
-	{ def: VueRouter, options: {} }
-];
-
-// Routes
-let siteConfigurations = {
-	default: homeConfig,
-	other: [adminConfig]
-};
-
 // Creates the site object and sets all the required variables
-let quadVerseSite = new QuadVerseSite(siteConfigurations);
-
-// Sets up the site and creates the VueRouter and Vue object
-quadVerseSite.setup(globalPlugins, '#site');
+let quadVerseSite = new QuadVerseSite();

@@ -17926,10 +17926,7 @@ module.exports = __webpack_require__(64);
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_router__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__setup_AdminConfiguration__ = __webpack_require__(41);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__setup_HomeConfiguration__ = __webpack_require__(54);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__setup_Site__ = __webpack_require__(60);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__setup_Site__ = __webpack_require__(60);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -17941,23 +17938,8 @@ __webpack_require__(19);
 // Site imports
 
 
-
-
-
-// Plugins
-var globalPlugins = [{ def: __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */], options: {} }];
-
-// Routes
-var siteConfigurations = {
-  default: __WEBPACK_IMPORTED_MODULE_2__setup_HomeConfiguration__["a" /* default */],
-  other: [__WEBPACK_IMPORTED_MODULE_1__setup_AdminConfiguration__["a" /* default */]]
-};
-
 // Creates the site object and sets all the required variables
-var quadVerseSite = new __WEBPACK_IMPORTED_MODULE_3__setup_Site__["a" /* default */](siteConfigurations);
-
-// Sets up the site and creates the VueRouter and Vue object
-quadVerseSite.setup(globalPlugins, '#site');
+var quadVerseSite = new __WEBPACK_IMPORTED_MODULE_0__setup_Site__["a" /* default */]();
 
 /***/ }),
 /* 19 */
@@ -39997,52 +39979,7 @@ module.exports = function spread(callback) {
 
 
 /***/ }),
-/* 41 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export AdminAuthPaths */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Admin__ = __webpack_require__(42);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Admin___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Admin__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_global_Login__ = __webpack_require__(45);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_global_Login___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_global_Login__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_admin_Dashboard__ = __webpack_require__(51);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_admin_Dashboard___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_admin_Dashboard__);
-
-
-
-
-var AdminAuthPaths = {
-	login: { name: 'adminDashboard' },
-	logout: { name: 'adminLogin' }
-};
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-	context: "Admin",
-	authPaths: AdminAuthPaths,
-	basePath: "admin",
-	routes: [{
-		path: '/admin', component: __WEBPACK_IMPORTED_MODULE_0__components_Admin___default.a,
-		children: [{
-			path: '',
-			component: __WEBPACK_IMPORTED_MODULE_1__components_global_Login___default.a,
-			name: 'adminLogin',
-			meta: {
-				authentication: false
-			}
-		}, {
-			path: 'dashboard',
-			component: __WEBPACK_IMPORTED_MODULE_2__components_admin_Dashboard___default.a,
-			name: 'adminDashboard',
-			meta: {
-				authentication: true
-			}
-		}]
-	}],
-	plugins: []
-});
-
-/***/ }),
+/* 41 */,
 /* 42 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -40570,29 +40507,7 @@ if (false) {
 }
 
 /***/ }),
-/* 54 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* unused harmony export AppAuthPaths */
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Home__ = __webpack_require__(55);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Home___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Home__);
-
-
-var AppAuthPaths = {
-	login: {},
-	logout: {}
-};
-
-/* harmony default export */ __webpack_exports__["a"] = ({
-	context: "App",
-	authPaths: AppAuthPaths,
-	basePath: "",
-	routes: [{ path: "/", component: __WEBPACK_IMPORTED_MODULE_0__components_Home___default.a, name: "home", meta: { authentication: false } }],
-	plugins: []
-});
-
-/***/ }),
+/* 54 */,
 /* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -40804,8 +40719,10 @@ if (false) {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue__ = __webpack_require__(61);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_vue__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__listeners_AuthRouterListener__ = __webpack_require__(83);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Authentication__ = __webpack_require__(84);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__configuration_Home__ = __webpack_require__(90);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__configuration_Admin__ = __webpack_require__(89);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Authentication__ = __webpack_require__(84);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__middleware_Authentication__ = __webpack_require__(88);
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -40814,37 +40731,45 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 
 
-// Listeners
+// Configurations
+
+
+
+// Authentication
 
 
 
 var _class = function () {
 
 	/**
-  * @param siteConfigurations
+  *
   */
-	function _class(siteConfigurations) {
+	function _class() {
 		_classCallCheck(this, _class);
 
-		this.siteConfigurations = siteConfigurations;
 		this.app = null;
 		this.context = "";
+		this.globalPlugins = [{ def: __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */], options: {} }];
+		this.root = '#site';
+		this.siteConfigurations = {
+			default: __WEBPACK_IMPORTED_MODULE_2__configuration_Home__["a" /* default */],
+			other: [__WEBPACK_IMPORTED_MODULE_3__configuration_Admin__["a" /* default */]]
+		};
+
+		this.setup();
 	}
 
 	/**
   * Run to setup the Vue object
-  *
-  * @param globalPlugins
-  * @param el
   */
 
 
 	_createClass(_class, [{
 		key: "setup",
-		value: function setup(globalPlugins, el) {
+		value: function setup() {
 
 			// Get combined items
-			var _getSiteConfiguration = this.getSiteConfigurationDetails(globalPlugins),
+			var _getSiteConfiguration = this.getSiteConfigurationDetails(this.globalPlugins),
 			    routes = _getSiteConfiguration.routes,
 			    plugins = _getSiteConfiguration.plugins,
 			    context = _getSiteConfiguration.context,
@@ -40855,12 +40780,16 @@ var _class = function () {
 
 			var router = this.getRouter(routes);
 
+			// The context name of the configuration
 			this.context = context;
 
-			this.authentication = new __WEBPACK_IMPORTED_MODULE_3__Authentication__["a" /* default */](router, authPaths);
+			// The authentication object
+			this.authentication = new __WEBPACK_IMPORTED_MODULE_4__Authentication__["a" /* default */](router, authPaths);
 
+			// The authentication middleware
 			this.createAuthMiddleware(router, this.authentication);
 
+			// Add authentication object to the Vue prototype
 			__WEBPACK_IMPORTED_MODULE_0_vue___default.a.prototype.$authentication = this.authentication;
 
 			// Setup the plugins on Vue
@@ -40868,7 +40797,7 @@ var _class = function () {
 
 			// Create the Vue object
 			this.app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
-				el: el,
+				el: this.root,
 				router: router
 			});
 		}
@@ -40882,7 +40811,7 @@ var _class = function () {
 		key: "createAuthMiddleware",
 		value: function createAuthMiddleware(router, auth) {
 			// Setup the beforeEach action on the router for authentication. Looks for meta key: authentication
-			Object(__WEBPACK_IMPORTED_MODULE_2__listeners_AuthRouterListener__["a" /* default */])(router, auth);
+			Object(__WEBPACK_IMPORTED_MODULE_5__middleware_Authentication__["a" /* default */])(router, auth);
 		}
 
 		/**
@@ -41024,6 +40953,22 @@ var _class = function () {
 		,
 		set: function set(value) {
 			this._app = value;
+		}
+	}, {
+		key: "globalPlugins",
+		get: function get() {
+			return this._globalPlugins;
+		},
+		set: function set(value) {
+			this._globalPlugins = value;
+		}
+	}, {
+		key: "root",
+		get: function get() {
+			return this._root;
+		},
+		set: function set(value) {
+			this._root = value;
 		}
 	}, {
 		key: "context",
@@ -52396,36 +52341,7 @@ if (false) {
 
 /***/ }),
 /* 82 */,
-/* 83 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = (function (router, auth) {
-	router.beforeEach(function (to, from, next) {
-
-		if (to.matched.some(function (record) {
-			return record.meta.authentication;
-		})) {
-
-			auth.loggedIn().then(function (loggedIn) {
-				return !loggedIn ? next(auth.authPaths.logout) : next();
-			});
-		} else {
-
-			if (to.name === auth.authPaths.logout.name) {
-
-				auth.loggedIn().then(function (loggedIn) {
-					return loggedIn ? next(auth.authPaths.login) : next();
-				});
-			} else {
-
-				next();
-			}
-		}
-	});
-});
-
-/***/ }),
+/* 83 */,
 /* 84 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -53515,6 +53431,121 @@ if (hadRuntime) {
   (function() { return this })() || Function("return this")()
 );
 
+
+/***/ }),
+/* 88 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony default export */ __webpack_exports__["a"] = (function (router, auth) {
+	// Before each route
+	router.beforeEach(function (to, from, next) {
+
+		// If meta authentication is set to true
+		if (to.matched.some(function (record) {
+			return record.meta.authentication;
+		})) {
+
+			/**
+    * Check if we are logged in. If we aren't, go to the path we would go to on logout. If we are logged in
+    * continue on to the next path
+    */
+			auth.loggedIn().then(function (loggedIn) {
+				return !loggedIn ? next(auth.authPaths.logout) : next();
+			});
+
+			// If meta authentication is set to false
+		} else {
+
+			// If the destination name is the same as where we would go on logout
+			if (to.name === auth.authPaths.logout.name) {
+
+				/**
+     * Check to see if we are logged on. If we are logged in go where we would go on login. Other wise
+     * continue on to our original destination
+     */
+				auth.loggedIn().then(function (loggedIn) {
+					return loggedIn ? next(auth.authPaths.login) : next();
+				});
+
+				// If the destination is not the same as where we would go on logout
+			} else {
+
+				// Continue to the destination
+				next();
+			}
+		}
+	});
+});
+
+/***/ }),
+/* 89 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export AdminAuthPaths */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Admin__ = __webpack_require__(42);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Admin___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Admin__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_global_Login__ = __webpack_require__(45);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_global_Login___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__components_global_Login__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_admin_Dashboard__ = __webpack_require__(51);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_admin_Dashboard___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_admin_Dashboard__);
+
+
+
+
+var AdminAuthPaths = {
+	login: { name: 'adminDashboard' },
+	logout: { name: 'adminLogin' }
+};
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+	context: "Admin",
+	authPaths: AdminAuthPaths,
+	basePath: "admin",
+	routes: [{
+		path: '/admin', component: __WEBPACK_IMPORTED_MODULE_0__components_Admin___default.a,
+		children: [{
+			path: '',
+			component: __WEBPACK_IMPORTED_MODULE_1__components_global_Login___default.a,
+			name: 'adminLogin',
+			meta: {
+				authentication: false
+			}
+		}, {
+			path: 'dashboard',
+			component: __WEBPACK_IMPORTED_MODULE_2__components_admin_Dashboard___default.a,
+			name: 'adminDashboard',
+			meta: {
+				authentication: true
+			}
+		}]
+	}],
+	plugins: []
+});
+
+/***/ }),
+/* 90 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* unused harmony export AppAuthPaths */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Home__ = __webpack_require__(55);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__components_Home___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__components_Home__);
+
+
+var AppAuthPaths = {
+	login: {},
+	logout: {}
+};
+
+/* harmony default export */ __webpack_exports__["a"] = ({
+	context: "App",
+	authPaths: AppAuthPaths,
+	basePath: "",
+	routes: [{ path: "/", component: __WEBPACK_IMPORTED_MODULE_0__components_Home___default.a, name: "home", meta: { authentication: false } }],
+	plugins: []
+});
 
 /***/ })
 /******/ ]);

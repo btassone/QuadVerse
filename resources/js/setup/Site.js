@@ -2,41 +2,55 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-// Listeners
-import authRouterListener from "../listeners/AuthRouterListener";
+// Configurations
+import homeConfig from "./configuration/Home";
+import adminConfig from "./configuration/Admin";
+
+// Authentication
 import Authentication from "./Authentication";
+import authenticationMiddleware from "../middleware/Authentication";
 
 export default class {
 
 	/**
-	 * @param siteConfigurations
+	 *
 	 */
-	constructor(siteConfigurations) {
-		this.siteConfigurations = siteConfigurations;
+	constructor() {
 		this.app = null;
 		this.context = "";
+		this.globalPlugins = [
+			{ def: VueRouter, options: {} }
+		];
+		this.root = '#site';
+		this.siteConfigurations = {
+			default: homeConfig,
+			other: [adminConfig]
+		};
+
+		this.setup();
 	}
 
 	/**
 	 * Run to setup the Vue object
-	 *
-	 * @param globalPlugins
-	 * @param el
 	 */
-	setup(globalPlugins, el) {
+	setup() {
 
 		// Get combined items
-		let { routes, plugins, context, authPaths } = this.getSiteConfigurationDetails(globalPlugins);
+		let { routes, plugins, context, authPaths } = this.getSiteConfigurationDetails(this.globalPlugins);
 
 		// Get router
 		let router = this.getRouter(routes);
 
+		// The context name of the configuration
 		this.context = context;
 
+		// The authentication object
 		this.authentication = new Authentication(router, authPaths);
 
+		// The authentication middleware
 		this.createAuthMiddleware(router, this.authentication);
 
+		// Add authentication object to the Vue prototype
 		Vue.prototype.$authentication = this.authentication;
 
 		// Setup the plugins on Vue
@@ -44,7 +58,7 @@ export default class {
 
 		// Create the Vue object
 		this.app = new Vue({
-			el: el,
+			el: this.root,
 			router
 		});
 	}
@@ -55,7 +69,7 @@ export default class {
 	 */
 	createAuthMiddleware(router, auth) {
 		// Setup the beforeEach action on the router for authentication. Looks for meta key: authentication
-		authRouterListener(router, auth);
+		authenticationMiddleware(router, auth);
 	}
 
 	/**
@@ -166,6 +180,22 @@ export default class {
 	 */
 	set app(value) {
 		this._app = value;
+	}
+
+	get globalPlugins() {
+		return this._globalPlugins;
+	}
+
+	set globalPlugins(value) {
+		this._globalPlugins = value;
+	}
+
+	get root() {
+		return this._root;
+	}
+
+	set root(value) {
+		this._root = value;
 	}
 
 	get context() {
