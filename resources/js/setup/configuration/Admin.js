@@ -1,11 +1,12 @@
+import BootstrapVue from 'bootstrap-vue'
 import Admin from "../../components/Admin";
 import Login from "../../components/admin/access/Login";
 import Dashboard from "../../components/admin/Dashboard";
-import BootstrapVue from 'bootstrap-vue'
+import DefaultContainer from "../../components/admin/containers/DefaultContainer";
 
 export const AdminAuthPaths = {
-	login: { name: 'adminDashboard' },
-	logout: { name: 'adminLogin' }
+	login: { name: 'Admin' },
+	logout: { name: 'Login' }
 };
 
 export default {
@@ -14,12 +15,14 @@ export default {
 	basePath: "admin",
 	routes: [
 		{
-			path: '/admin', component: Admin,
+			path: '/admin',
+			component: Admin,
+			redirect: '/admin/login',
 			children: [
 				{
-					path: '',
+					path: 'login',
 					component: Login,
-					name: 'adminLogin',
+					name: 'Login',
 					meta: {
 						authentication: false
 					}
@@ -27,10 +30,20 @@ export default {
 				{
 					path: 'dashboard',
 					component: Dashboard,
-					name: 'adminDashboard',
+					name: 'Admin',
+					redirect: '/admin/dashboard',
+					linkActiveClass: 'open active',
+					scrollBehavior: () => ({ y: 0 }),
 					meta: {
 						authentication: true
-					}
+					},
+					children: [
+						{
+							path: '',
+							name: 'Dashboard',
+							component: DefaultContainer
+						},
+					]
 				}
 			]
 		}
