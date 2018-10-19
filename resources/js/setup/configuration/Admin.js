@@ -1,6 +1,7 @@
 import Admin from "../../components/Admin";
-import Login from "../../components/global/Login";
+import Login from "../../components/admin/access/Login";
 import Dashboard from "../../components/admin/Dashboard";
+import BootstrapVue from 'bootstrap-vue'
 
 export const AdminAuthPaths = {
 	login: { name: 'adminDashboard' },
@@ -34,5 +35,7 @@ export default {
 			]
 		}
 	],
-	plugins: []
+	plugins: [
+		{ def: BootstrapVue, options: {} }
+	]
 }
