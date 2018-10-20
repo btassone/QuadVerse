@@ -22,14 +22,23 @@ Route::group([ 'prefix' => 'v1' ], function() {
 	// Authentication Routes
 	Route::group([ 'prefix' => 'auth' ], function() {
 		// Unauthenticated
-		Route::post('login', 'AuthController@login');
-		Route::post('register', 'AuthController@register');
-		Route::get('refresh', 'AuthController@refresh');
+		Route::post('login', 'API\AuthController@login');
+		Route::post('register', 'API\AuthController@register');
+		Route::get('refresh', 'API\AuthController@refresh');
 
 		// Authenticated
 		Route::middleware('auth:api')->group(function () {
-			Route::get('logout', 'AuthController@logout');
-			Route::get('user', 'AuthController@user');
+			Route::get('logout', 'API\AuthController@logout');
+			Route::get('user', 'API\AuthController@user');
 		});
 	});
+
+	// User CRUD routes
+	Route::apiResource('users', 'API\UserController');
+
+	// Role CRUD routes
+	Route::apiResource('roles', 'API\RoleController');
+
+	// Permission CRUD routes
+	Route::apiResource('permissions', 'API\PermissionController');
 });

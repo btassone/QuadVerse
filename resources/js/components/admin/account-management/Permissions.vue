@@ -1,5 +1,5 @@
 <template>
-    <div>Dashboard</div>
+    <div>Permissions</div>
 </template>
 <script>
 	export default {
@@ -7,7 +7,7 @@
 
 		},
 		mounted() {
-			console.log('Dashboard mounted.')
+			console.log('Permissions mounted.')
 		}
 	}
 </script>

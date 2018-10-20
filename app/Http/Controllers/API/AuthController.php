@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\API;
 
 use App\User;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
@@ -15,21 +16,21 @@ class AuthController extends Controller
 	 * @return array|\Symfony\Component\HttpFoundation\Response
 	 * @throws \Illuminate\Validation\ValidationException
 	 */
-    public function register(Request $request) {
-    	$this->validate($request, [
-    		'name' => 'required|min:3',
+	public function register(Request $request) {
+		$this->validate($request, [
+			'name' => 'required|min:3',
 			'email' => 'required|email|unique:users',
 			'password' => 'required|min:6'
 		]);
 
-    	$user = User::create([
-    		'name' => $request->name,
+		$user = User::create([
+			'name' => $request->name,
 			'email' => $request->email,
 			'password' => bcrypt($request->password)
 		]);
 
-    	return $this->proxy('password', [
-    		"username" => $user->email,
+		return $this->proxy('password', [
+			"username" => $user->email,
 			"password" => $user->password
 		]);
 	}
@@ -42,17 +43,17 @@ class AuthController extends Controller
 	 */
 	public function login(Request $request) {
 
-    	$this->validate($request, [
-    		'email' => 'required',
+		$this->validate($request, [
+			'email' => 'required',
 			'password' => 'required'
 		]);
 
-    	$credentials = [
-    		'username' => $request->email,
+		$credentials = [
+			'username' => $request->email,
 			'password' => $request->password
 		];
 
-    	return $this->proxy('password', $credentials);
+		return $this->proxy('password', $credentials);
 	}
 
 	/**
@@ -62,10 +63,10 @@ class AuthController extends Controller
 		$accessToken = $request->user()->token();
 
 		DB::table('oauth_refresh_tokens')
-			->where('access_token_id', $accessToken->id)
-			->update([
-				'revoked' => true
-			]);
+		  ->where('access_token_id', $accessToken->id)
+		  ->update([
+			  'revoked' => true
+		  ]);
 
 		$accessToken->revoke();
 
@@ -78,7 +79,7 @@ class AuthController extends Controller
 	 * @return mixed
 	 */
 	public function user(Request $request) {
-    	return $request->user();
+		return $request->user();
 	}
 
 	/**
@@ -88,10 +89,10 @@ class AuthController extends Controller
 	 * @return array|\Symfony\Component\HttpFoundation\Response
 	 */
 	public function refresh(Request $request) {
-    	$refreshToken = $request->cookie('refresh_token');
+		$refreshToken = $request->cookie('refresh_token');
 
-    	return $this->proxy('refresh_token', [
-    		'refresh_token' => $refreshToken
+		return $this->proxy('refresh_token', [
+			'refresh_token' => $refreshToken
 		]);
 	}
 

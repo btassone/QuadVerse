@@ -50,7 +50,7 @@
     <TheFooter>
       <!--footer-->
       <div>
-        <a href="https://coreui.io">QuadVerse</a>
+        <a href="https://github.com/btassone/laravel-spa-base">Laravel SPA Base</a>
         <span class="ml-1">&copy; 2018 Brandon Tassone.</span>
       </div>
       <div class="ml-auto">

@@ -6,7 +6,7 @@
 
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>Quad Verse</title>
+        <title>Laravel SPA Base</title>
 
         <link rel="stylesheet" href="{{ asset('css/app.css') }}" />
     </head>

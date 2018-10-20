@@ -7,7 +7,7 @@
 require('./bootstrap');
 
 // Site imports
-import QuadVerseSite from "./setup/Site";
+import Site from "./setup/Site";
 
 // Creates the site object and sets all the required variables
-let quadVerseSite = new QuadVerseSite();
+let site = new Site();
