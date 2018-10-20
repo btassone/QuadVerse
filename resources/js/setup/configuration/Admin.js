@@ -36,7 +36,7 @@ export default {
 			scrollBehavior: () => ({ y: 0 }),
 			children: [
 				{
-					path: 'login',
+					path: '/admin/login',
 					component: Login,
 					name: 'Login',
 					meta: {
