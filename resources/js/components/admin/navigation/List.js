@@ -19,11 +19,6 @@ export default {
 					name: 'Roles',
 					url: '/admin/account-management/roles',
 					icon: 'icon-layers'
-				},
-				{
-					name: 'Permissions',
-					url: '/admin/account-management/permissions',
-					icon: 'icon-lock'
 				}
 			]
 		}

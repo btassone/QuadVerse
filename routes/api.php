@@ -38,7 +38,4 @@ Route::group([ 'prefix' => 'v1' ], function() {
 
 	// Role CRUD routes
 	Route::apiResource('roles', 'API\RoleController');
-
-	// Permission CRUD routes
-	Route::apiResource('permissions', 'API\PermissionController');
 });

@@ -14,7 +14,6 @@ import DefaultContainer from "../../components/admin/containers/DefaultContainer
 // Account Management
 import Users from "../../components/admin/account-management/Users";
 import Roles from "../../components/admin/account-management/Roles";
-import Permissions from "../../components/admin/account-management/Permissions";
 
 // Auth paths for authenticated and un-authenticated users
 export const AdminAuthPaths = {
@@ -74,11 +73,6 @@ export default {
 									path: '/admin/account-management/roles',
 									name: 'Roles',
 									component: Roles
-								},
-								{
-									path: '/admin/account-management/permissions',
-									name: 'Permissions',
-									component: Permissions
 								}
 							]
 						}
