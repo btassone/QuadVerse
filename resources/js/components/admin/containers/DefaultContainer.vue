@@ -7,11 +7,10 @@
         <img class="navbar-brand-minimized" src="../assets/img/brand/sygnet.svg" width="30" height="30" alt="CoreUI Logo">
       </b-link>
       <SidebarToggler class="d-md-down-none" display="lg" />
-      <!--<b-navbar-nav class="d-md-down-none">-->
-        <!--<b-nav-item class="px-3" to="/admin/dashboard">Dashboard</b-nav-item>-->
-        <!--<b-nav-item class="px-3" to="/admin/users" exact>Users</b-nav-item>-->
-        <!--<b-nav-item class="px-3" to="/admin/settings">Settings</b-nav-item>-->
-      <!--</b-navbar-nav>-->
+      <b-navbar-nav class="d-md-down-none">
+        <b-nav-item class="px-3" to="/admin/dashboard">Dashboard</b-nav-item>
+        <b-nav-item class="px-3" to="/admin/account-management">Account Management</b-nav-item>
+      </b-navbar-nav>
       <b-navbar-nav class="ml-auto">
         <b-nav-item class="d-md-down-none">
           <i class="icon-bell"></i>
