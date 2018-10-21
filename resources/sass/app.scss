@@ -12,3 +12,11 @@
 
 // ie fixes
 @import "ie-fix";
+
+.text-color-primary {
+  color: $primary;
+}
+
+.text-color-danger {
+  color: $danger;
+}
