@@ -2,11 +2,16 @@
 
 namespace App\Http\Controllers\API;
 
+use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
+	/**
+	 * @var int
+	 */
+	protected $paginate = 20;
 
 	public function __construct() {
 		$this->middleware('auth:api');
@@ -15,11 +20,13 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      *
+	 * @param \Illuminate\Http\Request  $request
+	 *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-		//
+		return User::latest()->paginate($this->paginate);
     }
 
     /**
