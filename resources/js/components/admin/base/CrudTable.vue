@@ -123,7 +123,6 @@
 				// Show the modal
 				this.$refs.addResourceModal.show();
 				this.context = context;
-				this.$emit('modal-open');
             },
 			// Generate an add-item custom event
 	        addItem(items) {
