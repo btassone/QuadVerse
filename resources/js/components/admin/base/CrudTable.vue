@@ -47,8 +47,9 @@
                 :ok-title="contextOkText"
                 cancel-variant="danger"
                 :title="contextTitle"
+                centered
                 @ok="addItem(crudData.items)">
-            Hello From My Modal!
+            <slot name="modal-content"></slot>
         </b-modal>
     </b-card>
 </template>

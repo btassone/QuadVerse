@@ -12,6 +12,9 @@
                         @add-item="addUser"
                         @edit-item="editUser"
                         @delete-item="deleteUser">
+                    <template slot="modal-content">
+                        This is custom modal content
+                    </template>
                 </crud-table>
             </b-col>
         </b-row>
