@@ -44,7 +44,7 @@
         <b-modal
                 ref="addResourceModal"
                 ok-variant="success"
-                ok-title="Add"
+                :ok-title="contextAddTitle"
                 cancel-variant="danger"
                 :title="contextTitle"
                 @ok="addItem(crudData.items)">
@@ -53,10 +53,11 @@
     </b-card>
 </template>
 <script>
+    // Modal contexts and titles
     const MODAL_CONTEXTS = {
-    	add: 'Add',
-        edit: 'Edit',
-        delete: 'Delete'
+    	add: { title: 'Add', btn: 'Add' },
+        edit: { title: 'Edit', btn: 'Update' },
+        delete: { title: 'Delete', btn: 'Delete' }
     };
 
 	export default {
@@ -115,13 +116,18 @@
         },
         computed: {
 			contextTitle() {
-                return `${MODAL_CONTEXTS[this.context]} ${this.resourceName}`;
+                return `${MODAL_CONTEXTS[this.context].title} ${this.resourceName}`;
+            },
+            contextAddTitle() {
+	            return MODAL_CONTEXTS[this.context].btn;
             }
         },
         methods: {
 			openModal(context) {
 				// Show the modal
 				this.$refs.addResourceModal.show();
+
+				// Change the context
 				this.context = context;
             },
 			// Generate an add-item custom event
