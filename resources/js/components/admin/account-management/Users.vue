@@ -5,6 +5,7 @@
             <b-col lg="12">
                 <crud-table
                         :crud-data="userData"
+                        :per-page="perPage"
                         resource-icon="fa-users"
                         resource-name="Users"
                         striped
@@ -18,6 +19,7 @@
 </template>
 <script>
     import crudTable from "../base/CrudTable";
+    import axios from "axios";
 
 	export default {
 		components: {
@@ -26,27 +28,36 @@
         data: () => {
 		    return {
 			    userData: {
-				    items: [
-					    { id: 1, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
-					    { id: 2, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
-					    { id: 3, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
-					    { id: 4, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
-					    { id: 5, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
-					    { id: 6, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
-					    { id: 7, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
-					    { id: 8, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
-					    { id: 9, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" }
-				    ],
+				    items: [],
 				    fields: [
 					    {key: "id"},
 					    {key: "name"},
 					    {key: "email"},
 					    {key: "created_at"}
 				    ]
-			    }
+			    },
+                perPage: 10
             }
         },
+        created() {
+            this.loadUsers();
+        },
         methods: {
+			loadUsers() {
+				axios.get('/api/v1/users', this.$authentication.headers()).then( ({data}) => {
+					let users = data.data;
+
+					users.filter(user => {
+						let filteredUser = {};
+
+						this.userData.fields.forEach(field => {
+							filteredUser[field.key] = user[field.key]
+						});
+
+						this.userData.items.push(filteredUser);
+                    });
+				});
+            },
 			addUser(users) {
 				console.log("Hit function");
 				users.push({ id: users.length + 1, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" })
