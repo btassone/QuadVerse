@@ -34,9 +34,7 @@
 					    {key: "name"},
 					    {key: "email"},
 					    {key: "created_at"}
-				    ],
-				    currentPage: 1,
-				    perPage: 5
+				    ]
 			    }
             }
         }
