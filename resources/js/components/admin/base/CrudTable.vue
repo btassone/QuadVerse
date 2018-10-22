@@ -1,7 +1,7 @@
 <template>
     <b-card>
         <!-- Header template for the b-card -->
-        <template slot="header" :slot-scope="[resourceName, resourceIcon, crudData]">
+        <template slot="header" :slot-scope="[resourceName, resourceIcon]">
             <div class="row">
                 <div class="d-flex col-6 align-items-center">
                     <span>
@@ -9,7 +9,7 @@
                     </span>
                 </div>
                 <div class="d-flex col-6 justify-content-end">
-                    <b-button variant="success" @click="addItem(crudData.items)">
+                    <b-button variant="success" @click="openModal('add')">
                         <i class="fa fa-plus"></i> Add {{resourceName}}
                     </b-button>
                 </div>
@@ -41,9 +41,24 @@
         <nav>
             <b-pagination-nav base-url="#" :number-of-pages="getPageCount(crudData.items, perPage)" v-model="currentPage" prev-text="Prev" next-text="Next" hide-goto-end-buttons/>
         </nav>
+        <b-modal
+                ref="addResourceModal"
+                ok-variant="success"
+                ok-title="Add"
+                cancel-variant="danger"
+                :title="contextTitle"
+                @ok="addItem(crudData.items)">
+            Hello From My Modal!
+        </b-modal>
     </b-card>
 </template>
 <script>
+    const MODAL_CONTEXTS = {
+    	add: 'Add',
+        edit: 'Edit',
+        delete: 'Delete'
+    };
+
 	export default {
 		name: 'crud-table',
         props: {
@@ -87,7 +102,8 @@
 		data: () => {
 			return {
 				totalRows: 0,
-                currentPage: 1
+                currentPage: 1,
+                context: 'add'
 			}
 		},
         created() {
@@ -97,9 +113,21 @@
 		    // Set the navigation / url to the correct page for history
 		    this.setPage();
         },
+        computed: {
+			contextTitle() {
+                return `${MODAL_CONTEXTS[this.context]} ${this.resourceName}`;
+            }
+        },
         methods: {
+			openModal(context) {
+				// Show the modal
+				this.$refs.addResourceModal.show();
+				this.context = context;
+				this.$emit('modal-open');
+            },
 			// Generate an add-item custom event
 	        addItem(items) {
+	        	// Emit the event
 				this.$emit('add-item', items);
             },
 	        // Generate an edit-item custom event
