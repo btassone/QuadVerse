@@ -1,7 +1,7 @@
 <template>
     <b-card>
         <!-- Header template for the b-card -->
-        <template slot="header" :slot-scope="[resourceName, resourceIcon]">
+        <template slot="header" :slot-scope="[resourceName, resourceIcon, crudData]">
             <div class="row">
                 <div class="d-flex col-6 align-items-center">
                     <span>
@@ -9,7 +9,7 @@
                     </span>
                 </div>
                 <div class="d-flex col-6 justify-content-end">
-                    <b-button variant="success" @click="openModal('add')">
+                    <b-button variant="success" @click="openModal('add', crudData.items)">
                         <i class="fa fa-plus"></i> Add {{resourceName}}
                     </b-button>
                 </div>
@@ -29,7 +29,7 @@
                 responsive>
             <template slot="modify" slot-scope="{ item }">
                 <div class="d-flex align-items-center">
-                    <button class="btn btn-primary m-1" @click="editItem(item)">
+                    <button class="btn btn-primary m-1" @click="openModal('edit', item)">
                         <i class="fa fa-edit"></i>
                     </button>
                     <button class="btn btn-danger m-1" @click="deleteItem(item.id)">
@@ -48,7 +48,7 @@
                 cancel-variant="danger"
                 :title="contextTitle"
                 centered
-                @ok="addItem(crudData.items)">
+                @ok="contextItem">
             <slot name="modal-content"></slot>
         </b-modal>
     </b-card>
@@ -105,7 +105,8 @@
 			return {
 				totalRows: 0,
                 currentPage: 1,
-                context: 'add'
+                context: 'add',
+                modalDataSet: null
 			}
 		},
         created() {
@@ -126,21 +127,35 @@
             }
         },
         methods: {
-			openModal(context) {
+			openModal(context, data) {
+				this.modalDataSet = data;
+
 				// Show the modal
 				this.$refs.addResourceModal.show();
 
 				// Change the context
 				this.context = context;
             },
+            contextItem() {
+				switch(this.context) {
+                    case 'add':
+                    	this.addItem();
+                        break;
+                    case 'edit':
+                    	this.editItem();
+                    	break;
+                    case 'delete':
+                    	break;
+                }
+            },
 			// Generate an add-item custom event
-	        addItem(items) {
+	        addItem() {
 	        	// Emit the event
-				this.$emit('add-item', items);
+				this.$emit('add-item', this.modalDataSet);
             },
 	        // Generate an edit-item custom event
-            editItem(item) {
-	            this.$emit('edit-item', item);
+            editItem() {
+	            this.$emit('edit-item', this.modalDataSet);
             },
 	        // Generate an delete-item custom event
 	        deleteItem(id) {

@@ -13,7 +13,21 @@
                         @edit-item="editUser"
                         @delete-item="deleteUser">
                     <template slot="modal-content">
-                        This is custom modal content
+                        <div class="form-group">
+                            <input v-model="form.name" type="text" name="name" id="name" placeholder="Name"
+                                   class="form-control" :class="{ 'is-invalid': form.errors.has('name') }" />
+                            <has-error :form="form" field="name"></has-error>
+                        </div>
+                        <div class="form-group">
+                            <input v-model="form.email" type="email" name="email" id="email" placeholder="Email Address"
+                                   class="form-control" :class="{ 'is-invalid': form.errors.has('email') }" />
+                            <has-error :form="form" field="email"></has-error>
+                        </div>
+                        <div class="form-group">
+                            <input v-model="form.password" type="password" name="password" id="password" placeholder="Password"
+                                   class="form-control" :class="{ 'is-invalid': form.errors.has('password') }" />
+                            <has-error :form="form" field="password"></has-error>
+                        </div>
                     </template>
                 </crud-table>
             </b-col>
@@ -21,12 +35,17 @@
     </div>
 </template>
 <script>
-    import crudTable from "../base/CrudTable";
+    import CrudTable from "../base/CrudTable";
     import axios from "axios";
+    import Form from "vform";
+    import { HasError } from "vform";
+    import { AlertError } from "vform";
 
 	export default {
 		components: {
-			crudTable
+			CrudTable,
+			HasError,
+			AlertError
 		},
         data: () => {
 		    return {
@@ -39,7 +58,12 @@
 					    {key: "created_at"}
 				    ]
 			    },
-                perPage: 10
+                perPage: 10,
+                form: new Form({
+                    name: '',
+                    email: '',
+                    password: ''
+                })
             }
         },
         created() {
@@ -62,7 +86,7 @@
 				});
             },
 			addUser(users) {
-				users.push({ id: users.length + 1, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" })
+				users.push({ id: parseInt(users[users.length-1].id) + 1, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" })
             },
             editUser(user) {
 				user.name = "Working";
