@@ -90,6 +90,10 @@
 				totalRows: 0
 			}
 		},
+        created() {
+			// Inject the modify field so its always there
+		    this.crudData.fields.push({key: "modify"});
+        },
         methods: {
 	        addData(data) {
 				data.items.push({ id: data.items.length+1, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018", modify: "Edit / Delete" })

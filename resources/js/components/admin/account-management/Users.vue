@@ -19,22 +19,21 @@
 		    return {
 			    userData: {
 				    items: [
-					    { id: 1, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018", modify: "" },
-					    { id: 2, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018", modify: "" },
-					    { id: 3, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018", modify: "" },
-					    { id: 4, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018", modify: "" },
-					    { id: 5, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018", modify: "" },
-					    { id: 6, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018", modify: "" },
-					    { id: 7, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018", modify: "" },
-					    { id: 8, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018", modify: "" },
-					    { id: 9, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018", modify: "" }
+					    { id: 1, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
+					    { id: 2, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
+					    { id: 3, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
+					    { id: 4, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
+					    { id: 5, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
+					    { id: 6, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
+					    { id: 7, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
+					    { id: 8, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" },
+					    { id: 9, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" }
 				    ],
 				    fields: [
 					    {key: "id"},
 					    {key: "name"},
 					    {key: "email"},
-					    {key: "created_at"},
-					    {key: "modify"}
+					    {key: "created_at"}
 				    ],
 				    currentPage: 1,
 				    perPage: 5
