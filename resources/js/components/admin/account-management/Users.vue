@@ -59,7 +59,6 @@
 				});
             },
 			addUser(users) {
-				console.log("Hit function");
 				users.push({ id: users.length + 1, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" })
             },
             editUser(user) {

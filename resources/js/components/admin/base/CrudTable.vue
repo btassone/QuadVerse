@@ -44,7 +44,7 @@
         <b-modal
                 ref="addResourceModal"
                 ok-variant="success"
-                :ok-title="contextAddTitle"
+                :ok-title="contextOkText"
                 cancel-variant="danger"
                 :title="contextTitle"
                 @ok="addItem(crudData.items)">
@@ -115,10 +115,12 @@
 		    this.setPage();
         },
         computed: {
+			// Get the modal title based on the context and resource name
 			contextTitle() {
                 return `${MODAL_CONTEXTS[this.context].title} ${this.resourceName}`;
             },
-            contextAddTitle() {
+            // Get the ok modal button title based on the context btn text
+            contextOkText() {
 	            return MODAL_CONTEXTS[this.context].btn;
             }
         },
