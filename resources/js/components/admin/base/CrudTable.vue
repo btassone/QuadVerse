@@ -9,7 +9,7 @@
                     </span>
                 </div>
                 <div class="d-flex col-6 justify-content-end">
-                    <b-button variant="success" @click="addData(crudData)">
+                    <b-button variant="success" @click="addItem(crudData.items)">
                         <i class="fa fa-plus"></i> Add {{resourceName}}
                     </b-button>
                 </div>
@@ -29,10 +29,10 @@
                 responsive>
             <template slot="modify" slot-scope="{ item }">
                 <div class="d-flex align-items-center">
-                    <button class="btn btn-primary m-1" @click="editData(item)">
+                    <button class="btn btn-primary m-1" @click="editItem(item)">
                         <i class="fa fa-edit"></i>
                     </button>
-                    <button class="btn btn-danger m-1" @click="deleteData(item.id)">
+                    <button class="btn btn-danger m-1" @click="deleteItem(item.id)">
                         <i class="fa fa-trash"></i>
                     </button>
                 </div>
@@ -94,24 +94,29 @@
 			// Inject the modify field so its always there
 		    this.crudData.fields.push({key: "modify"});
 
+		    // Set the navigation / url to the correct page for history
 		    this.setPage();
         },
         methods: {
-	        addData(data) {
-				data.items.push({ id: data.items.length+1, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018", modify: "Edit / Delete" })
+			// Generate an add-item custom event
+	        addItem(items) {
+				this.$emit('add-item', items);
             },
-            editData(item) {
-	            item.name = "kittens"
+	        // Generate an edit-item custom event
+            editItem(item) {
+	            this.$emit('edit-item', item);
             },
-	        deleteData(id) {
-				console.log(id);
+	        // Generate an delete-item custom event
+	        deleteItem(id) {
+				this.$emit('delete-item', id);
             },
+            // Get the page count
 	        getPageCount (items, perPage) {
 		        return Math.ceil(items.length / perPage)
 	        },
+            // Set the current page in the url on load
 	        setPage() {
 		        let pageNum = parseInt(this.$route.hash.substr(1));
-		        let pageCount = this.getPageCount(this.crudData.items, this.perPage);
 
 		        if(pageNum) {
 			        this.currentPage = pageNum;

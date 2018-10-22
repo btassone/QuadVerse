@@ -3,7 +3,15 @@
         <h1 class="mb-3">Manage Users</h1>
         <b-row>
             <b-col lg="12">
-                <crud-table :crud-data="userData" resource-icon="fa-users" resource-name="Users" striped></crud-table>
+                <crud-table
+                        :crud-data="userData"
+                        resource-icon="fa-users"
+                        resource-name="Users"
+                        striped
+                        @add-item="addUser"
+                        @edit-item="editUser"
+                        @delete-item="deleteUser">
+                </crud-table>
             </b-col>
         </b-row>
     </div>
@@ -36,6 +44,18 @@
 					    {key: "created_at"}
 				    ]
 			    }
+            }
+        },
+        methods: {
+			addUser(users) {
+				console.log("Hit function");
+				users.push({ id: users.length + 1, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" })
+            },
+            editUser(user) {
+				user.name = "Working";
+            },
+            deleteUser(userId) {
+				this.userData.items = this.userData.items.filter(user => user.id !== userId);
             }
         }
 	}
