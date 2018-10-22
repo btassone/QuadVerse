@@ -32,7 +32,7 @@
                     <button class="btn btn-primary m-1" @click="openModal('edit', item)">
                         <i class="fa fa-edit"></i>
                     </button>
-                    <button class="btn btn-danger m-1" @click="deleteItem(item.id)">
+                    <button class="btn btn-danger m-1" @click="openDeleteDialogModal('delete', item.id)">
                         <i class="fa fa-trash"></i>
                     </button>
                 </div>
@@ -54,6 +54,8 @@
     </b-card>
 </template>
 <script>
+	import swal from "sweetalert2";
+
     // Modal contexts and titles
     const MODAL_CONTEXTS = {
     	add: { title: 'Add', btn: 'Add' },
@@ -127,15 +129,28 @@
             }
         },
         methods: {
-			openModal(context, data) {
+			// Setup the context for each action
+			setupContext(context, data) {
+				// Set the current data
 				this.modalDataSet = data;
-
-				// Show the modal
-				this.$refs.addResourceModal.show();
 
 				// Change the context
 				this.context = context;
             },
+            // Open the modal for the add and edit contexts
+			openModal(context, data) {
+				this.setupContext(context, data);
+
+				// Show the modal
+				this.$refs.addResourceModal.show();
+            },
+            // Open the delete dialog modal (yes, no)
+            openDeleteDialogModal(context, data) {
+	            this.setupContext(context, data);
+
+	            this.contextItem();
+            },
+            // Switch the context according to what is set and fire the action with the data
             contextItem() {
 				switch(this.context) {
                     case 'add':
@@ -145,6 +160,7 @@
                     	this.editItem();
                     	break;
                     case 'delete':
+                    	this.deleteItem();
                     	break;
                 }
             },
@@ -158,8 +174,20 @@
 	            this.$emit('edit-item', this.modalDataSet);
             },
 	        // Generate an delete-item custom event
-	        deleteItem(id) {
-				this.$emit('delete-item', id);
+	        deleteItem() {
+		        swal({
+			        title: 'Are you sure?',
+			        text: "You won't be able to revert this!",
+			        type: 'warning',
+			        showCancelButton: true,
+			        confirmButtonColor: '#3085d6',
+			        cancelButtonColor: '#d33',
+			        confirmButtonText: 'Yes, delete it!'
+		        }).then((result) => {
+			        if(result.value) {
+				        this.$emit('delete-item', this.modalDataSet);
+			        }
+		        });
             },
             // Get the page count
 	        getPageCount (items, perPage) {
