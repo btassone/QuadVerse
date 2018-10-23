@@ -13,21 +13,23 @@
                         @edit-item="editUser"
                         @delete-item="deleteUser">
                     <template slot="modal-content">
-                        <div class="form-group">
-                            <input v-model="form.name" type="text" name="name" id="name" placeholder="Name"
-                                   class="form-control" :class="{ 'is-invalid': form.errors.has('name') }" />
-                            <has-error :form="form" field="name"></has-error>
-                        </div>
-                        <div class="form-group">
-                            <input v-model="form.email" type="email" name="email" id="email" placeholder="Email Address"
-                                   class="form-control" :class="{ 'is-invalid': form.errors.has('email') }" />
-                            <has-error :form="form" field="email"></has-error>
-                        </div>
-                        <div class="form-group">
-                            <input v-model="form.password" type="password" name="password" id="password" placeholder="Password"
-                                   class="form-control" :class="{ 'is-invalid': form.errors.has('password') }" />
-                            <has-error :form="form" field="password"></has-error>
-                        </div>
+                        <form @submit.prevent>
+                            <div class="form-group">
+                                <input v-model="form.name" type="text" name="name" id="name" placeholder="Name"
+                                       class="form-control" :class="{ 'is-invalid': form.errors.has('name') }" />
+                                <has-error :form="form" field="name"></has-error>
+                            </div>
+                            <div class="form-group">
+                                <input v-model="form.email" type="email" name="email" id="email" placeholder="Email Address"
+                                       class="form-control" :class="{ 'is-invalid': form.errors.has('email') }" />
+                                <has-error :form="form" field="email"></has-error>
+                            </div>
+                            <div class="form-group">
+                                <input v-model="form.password" type="password" name="password" id="password" placeholder="Password"
+                                       class="form-control" :class="{ 'is-invalid': form.errors.has('password') }" />
+                                <has-error :form="form" field="password"></has-error>
+                            </div>
+                        </form>
                     </template>
                 </crud-table>
             </b-col>
@@ -71,8 +73,10 @@
         },
         methods: {
 			loadUsers() {
-				axios.get('/api/v1/users', this.$authentication.headers()).then( ({data}) => {
+				axios.get('/api/v1/users', this.$authentication.headers()).then(({data}) => {
 					let users = data.data;
+
+					this.userData.items = [];
 
 					users.filter(user => {
 						let filteredUser = {};
@@ -85,10 +89,20 @@
                     });
 				});
             },
-			addUser(users) {
-				users.push({ id: parseInt(users[users.length-1].id) + 1, name: "Brandon Tassone", email: "brandontassone@gmail.com", created_at: "July 28, 2018" })
+			addUser(evt, modal) {
+				// Prevent default modal behavior
+				evt.preventDefault();
+
+                this.form.submit('post', '/api/v1/users', this.$authentication.headers())
+                    .then(({data}) => {
+                    	// Hide the modal
+                    	modal.hide();
+
+                    	// Load the users
+                    	this.loadUsers();
+                    })
             },
-            editUser(user) {
+            editUser(evt, modal, user) {
 				user.name = "Working";
             },
             deleteUser(userId) {

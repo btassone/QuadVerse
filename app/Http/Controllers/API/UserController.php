@@ -33,11 +33,24 @@ class UserController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+	 * @throws
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
-        //
+		$this->validate($request, [
+			'name' => 'required|min:3',
+			'email' => 'required|email|unique:users',
+			'password' => 'required|min:6'
+		]);
+
+		$user = User::create([
+			'name' => $request->name,
+			'email' => $request->email,
+			'password' => bcrypt($request->password)
+		]);
+
+		return response()->json(["message" => "success"]);
     }
 
     /**

@@ -64,10 +64,10 @@ class AuthController extends Controller
 		$accessToken = $request->user()->token();
 
 		DB::table('oauth_refresh_tokens')
-		  ->where('access_token_id', $accessToken->id)
-		  ->update([
-			  'revoked' => true
-		  ]);
+		  	->where('access_token_id', $accessToken->id)
+		  	->update([
+			  	'revoked' => true
+		  	]);
 
 		$accessToken->revoke();
 

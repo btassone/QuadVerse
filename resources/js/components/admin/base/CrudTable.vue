@@ -9,7 +9,7 @@
                     </span>
                 </div>
                 <div class="d-flex col-6 justify-content-end">
-                    <b-button variant="success" @click="openModal('add', crudData.items)">
+                    <b-button variant="success" @click="openModal('add')">
                         <i class="fa fa-plus"></i> Add {{resourceName}}
                     </b-button>
                 </div>
@@ -151,13 +151,13 @@
 	            this.contextItem();
             },
             // Switch the context according to what is set and fire the action with the data
-            contextItem() {
+            contextItem(evt) {
 				switch(this.context) {
                     case 'add':
-                    	this.addItem();
+                    	this.addItem(evt);
                         break;
                     case 'edit':
-                    	this.editItem();
+                    	this.editItem(evt);
                     	break;
                     case 'delete':
                     	this.deleteItem();
@@ -165,16 +165,16 @@
                 }
             },
 			// Generate an add-item custom event
-	        addItem() {
+	        addItem(evt) {
 	        	// Emit the event
-				this.$emit('add-item', this.modalDataSet);
+				this.$emit('add-item', evt, this.$refs.addResourceModal);
             },
 	        // Generate an edit-item custom event
-            editItem() {
-	            this.$emit('edit-item', this.modalDataSet);
+            editItem(evt) {
+	            this.$emit('edit-item', evt, this.$refs.addResourceModal, this.modalDataSet);
             },
 	        // Generate an delete-item custom event
-	        deleteItem() {
+	        deleteItem(evt) {
 		        swal({
 			        title: 'Are you sure?',
 			        text: "You won't be able to revert this!",
