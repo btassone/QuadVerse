@@ -39,7 +39,6 @@
 </template>
 <script>
     import CrudTable from "../base/CrudTable";
-    import axios from "axios";
     import Form from "vform";
     import { HasError } from "vform";
     import { AlertError } from "vform";
@@ -70,12 +69,13 @@
             }
         },
         created() {
-            this.loadUsers();
+			// TODO: Fix nav page not properly loading correct one on load
+		    this.loadUsers();
         },
         methods: {
 			// Load all the users in the DB
 			loadUsers() {
-				axios.get('/api/v1/users')
+				this.$http.get('/api/v1/users')
                     .then(({data}) => this.userData.items = data.data);
             },
             modalOpen(context, data) {

@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Carbon;
 
 class AuthController extends Controller
 {
@@ -112,14 +111,34 @@ class AuthController extends Controller
 			'grant_type'    => $grantType
 		]);
 
+		// Get OAuth2 Tokens from route
 		$request = Request::create('/oauth/token', 'POST', $data);
 		$response = app()->handle($request);
 
+		// If their was a problem bail out
 		if($response->getStatusCode() != 200) {
 			return $response;
 		}
 
+		// Parse the data
 		$data = json_decode($response->getContent());
+
+		// Get the user based on the new tokens as auth
+		$userRequest = Request::create('/api/v1/auth/user', 'GET');
+		$userRequest->headers->set('X-Requested-With', 'XMLHttpRequest');
+		$userRequest->headers->set('Access-Control-Allow-Credentials', 'true');
+		$userRequest->headers->set('Authorization', "Bearer {$data->access_token}");
+
+		// Get the user response
+		$userResponse = app()->handle($userRequest);
+
+		// If it fails (it shouldn't) bail out
+		if($userResponse->getStatusCode() != 200) {
+			return $userResponse;
+		}
+
+		// Set the user response data
+		$userData = json_decode($userResponse->getContent());
 
 		// Create a refresh token cookie
 		Cookie::queue(
@@ -132,9 +151,11 @@ class AuthController extends Controller
 			true // HttpOnly
 		);
 
+		// Return the data
 		return [
 			'access_token' => $data->access_token,
-			'expires_in' => $data->expires_in
+			'expires_in' => $data->expires_in,
+			'user' => $userData
 		];
 	}
 }

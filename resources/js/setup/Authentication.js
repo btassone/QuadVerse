@@ -11,6 +11,7 @@ export default class Authentication {
 		this.authPaths = authPaths;
 		this.router = router;
 		this.accessToken = "";
+		this.user = null;
 	}
 
 	/**
@@ -20,15 +21,21 @@ export default class Authentication {
 	 * @returns {Promise<boolean>}
 	 */
 	async loggedIn() {
-		let loggedIn = false;
+		let loggedIn = true;
 
-		await axios.get("/api/v1/auth/user")
+		if(!this.user) {
+			await axios.get("/api/v1/auth/user")
 			// If it is still good, send them to the dashboard
-			.then(() => {
-				loggedIn = true;
-			})
-			// See if the refresh token is good
-			.catch(() => this.refresh().then(value => loggedIn = value));
+				.then(({data}) => {
+					// Set login to true
+					loggedIn = true;
+
+					// Assign the logged in user data
+					this.user = data;
+				})
+				// See if the refresh token is good
+				.catch(() => this.refresh().then(value => loggedIn = value));
+		}
 
 		return loggedIn;
 	}
@@ -46,13 +53,23 @@ export default class Authentication {
 		await axios.get("/api/v1/auth/refresh")
 			// Token is good. Pass them to the dashboard
 			.then(({data}) => {
+				// Set the token
 				this.accessToken = data.access_token;
 
+				// Set the user
+				this.user = data.user;
+
+				// Now logged in
 				loggedIn = true;
 			})
 			.catch(() => {
+				// Remove the token
 				this.removeAccessToken();
 
+				// Set user null
+				this.user = null;
+
+				// Set logged out
 				loggedIn = false
 			});
 
@@ -67,8 +84,13 @@ export default class Authentication {
 	logIn(form) {
 		form.post("/api/v1/auth/login")
 			.then(({data}) => {
+				// Set the access token
 				this.accessToken = data.access_token;
 
+				// Set the user
+				this.user = data.user;
+
+				// Go to the on login page
 				this.goOnAuthentication();
 			});
 	}
@@ -79,8 +101,13 @@ export default class Authentication {
 	logOut() {
 		axios.get("/api/v1/auth/logout")
 			.then(() => {
+				// Remove the access token
 				this.removeAccessToken();
 
+				// Remove the user data
+				this.user = null;
+
+				// Go to the unauthorized page
 				this.goOnUnauthorized();
 			});
 	}
@@ -174,5 +201,19 @@ export default class Authentication {
 	 */
 	set accessToken(value) {
 		axios.defaults.headers.common['Authorization'] = `${this.authType} ${value}`;
+	}
+
+	/**
+	 * @returns {*}
+	 */
+	get user() {
+		return this._user;
+	}
+
+	/**
+	 * @param value
+	 */
+	set user(value) {
+		this._user = value;
 	}
 }
