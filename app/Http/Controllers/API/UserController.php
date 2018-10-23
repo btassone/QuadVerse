@@ -34,23 +34,22 @@ class UserController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
 	 * @throws
+	 *
      * @return \Illuminate\Http\JsonResponse
      */
     public function store(Request $request)
     {
 		$this->validate($request, [
-			'name' => 'required|min:3',
-			'email' => 'required|email|unique:users',
-			'password' => 'required|min:6'
+			'name' => 'required|string|min:3',
+			'email' => 'required|string|email|max:80|unique:users',
+			'password' => 'required|string|min:6'
 		]);
 
-		$user = User::create([
+		return User::create([
 			'name' => $request->name,
 			'email' => $request->email,
 			'password' => bcrypt($request->password)
 		]);
-
-		return response()->json(["message" => "success"]);
     }
 
     /**
@@ -69,11 +68,23 @@ class UserController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+	 * @throws
+	 *
+     * @return \Illuminate\Http\JsonResponse
      */
     public function update(Request $request, $id)
     {
-        //
+		$user = User::findOrFail($id);
+
+		$this->validate($request, [
+			'name' => 'required|string|min:3',
+			'email' => 'required|string|email|max:80|unique:users,email,'.$user->id,
+			'password' => 'sometimes|string|min:6'
+		]);
+
+		$user->update($request->all());
+
+		return $user;
     }
 
     /**

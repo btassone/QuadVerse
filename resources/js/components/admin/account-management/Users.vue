@@ -11,7 +11,8 @@
                         striped
                         @add-item="addUser"
                         @edit-item="editUser"
-                        @delete-item="deleteUser">
+                        @delete-item="deleteUser"
+                        @modal-open="modalOpen">
                     <template slot="modal-content">
                         <form @submit.prevent>
                             <div class="form-group">
@@ -72,38 +73,38 @@
             this.loadUsers();
         },
         methods: {
+			// Load all the users in the DB
 			loadUsers() {
-				axios.get('/api/v1/users', this.$authentication.headers()).then(({data}) => {
-					let users = data.data;
-
-					this.userData.items = [];
-
-					users.filter(user => {
-						let filteredUser = {};
-
-						this.userData.fields.forEach(field => {
-							filteredUser[field.key] = user[field.key]
-						});
-
-						this.userData.items.push(filteredUser);
-                    });
-				});
+				axios.get('/api/v1/users', this.$authentication.headers())
+                    .then(({data}) => this.userData.items = data.data);
             },
-			addUser(evt, modal) {
-				// Prevent default modal behavior
-				evt.preventDefault();
+            modalOpen(context, data) {
+	            this.form.reset();
+	            this.form.clear();
 
+	            if(context === 'edit') {
+		            this.form.fill(data);
+	            }
+            },
+			addUser(modal) {
                 this.form.submit('post', '/api/v1/users', this.$authentication.headers())
-                    .then(({data}) => {
+                    .then(() => {
                     	// Hide the modal
                     	modal.hide();
 
-                    	// Load the users
-                    	this.loadUsers();
+                    	// Update the user list
+                        this.loadUsers();
                     })
             },
-            editUser(evt, modal, user) {
-				user.name = "Working";
+            editUser(modal, user) {
+				this.form.submit('put', `/api/v1/users/${user.id}`, this.$authentication.headers())
+                    .then(() => {
+	                    // Hide the modal
+                    	modal.hide();
+
+	                    // Update the user list
+                    	this.loadUsers();
+                    });
             },
             deleteUser(userId) {
 				this.userData.items = this.userData.items.filter(user => user.id !== userId);

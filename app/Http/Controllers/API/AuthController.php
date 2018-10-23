@@ -127,7 +127,7 @@ class AuthController extends Controller
 			$data->refresh_token,
 			1209600, // 14 days
 			null,
-			null,
+			\Illuminate\Support\Facades\Request::getHost(),
 			false,
 			true // HttpOnly
 		);

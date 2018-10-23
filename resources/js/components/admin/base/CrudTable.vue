@@ -143,6 +143,8 @@
 
 				// Show the modal
 				this.$refs.addResourceModal.show();
+
+				this.$emit('modal-open', this.context, this.modalDataSet);
             },
             // Open the delete dialog modal (yes, no)
             openDeleteDialogModal(context, data) {
@@ -166,12 +168,16 @@
             },
 			// Generate an add-item custom event
 	        addItem(evt) {
+				evt.preventDefault();
+
 	        	// Emit the event
-				this.$emit('add-item', evt, this.$refs.addResourceModal);
+				this.$emit('add-item', this.$refs.addResourceModal);
             },
 	        // Generate an edit-item custom event
             editItem(evt) {
-	            this.$emit('edit-item', evt, this.$refs.addResourceModal, this.modalDataSet);
+	            evt.preventDefault();
+
+	            this.$emit('edit-item', this.$refs.addResourceModal, this.modalDataSet);
             },
 	        // Generate an delete-item custom event
 	        deleteItem() {
