@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
 class AuthController extends Controller
 {
@@ -124,7 +125,7 @@ class AuthController extends Controller
 		Cookie::queue(
 			'refresh_token',
 			$data->refresh_token,
-			864000, // 10 days
+			1209600, // 14 days
 			null,
 			null,
 			false,
