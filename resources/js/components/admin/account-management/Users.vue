@@ -87,7 +87,7 @@
 	            }
             },
 			addUser(modal) {
-                this.form.submit('post', '/api/v1/users')
+                this.form.post('/api/v1/users')
                     .then(() => {
                     	// Hide the modal
                     	modal.hide();
@@ -97,7 +97,7 @@
                     })
             },
             editUser(modal, user) {
-				this.form.submit('put', `/api/v1/users/${user.id}`)
+				this.form.put(`/api/v1/users/${user.id}`)
                     .then(() => {
 	                    // Hide the modal
                     	modal.hide();
