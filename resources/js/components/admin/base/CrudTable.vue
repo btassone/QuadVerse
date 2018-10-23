@@ -42,7 +42,7 @@
             <b-pagination-nav base-url="#" :number-of-pages="getPageCount(crudData.items, perPage)" v-model="currentPage" prev-text="Prev" next-text="Next" hide-goto-end-buttons/>
         </nav>
         <b-modal
-                ref="addResourceModal"
+                ref="resourceModal"
                 ok-variant="success"
                 :ok-title="contextOkText"
                 cancel-variant="danger"
@@ -142,7 +142,7 @@
 				this.setupContext(context, data);
 
 				// Show the modal
-				this.$refs.addResourceModal.show();
+				this.$refs.resourceModal.show();
 
 				this.$emit('modal-open', this.context, this.modalDataSet);
             },
@@ -171,13 +171,13 @@
 				evt.preventDefault();
 
 	        	// Emit the event
-				this.$emit('add-item', this.$refs.addResourceModal);
+				this.$emit('add-item', this.$refs.resourceModal);
             },
 	        // Generate an edit-item custom event
             editItem(evt) {
 	            evt.preventDefault();
 
-	            this.$emit('edit-item', this.$refs.addResourceModal, this.modalDataSet);
+	            this.$emit('edit-item', this.$refs.resourceModal, this.modalDataSet);
             },
 	        // Generate an delete-item custom event
 	        deleteItem() {
