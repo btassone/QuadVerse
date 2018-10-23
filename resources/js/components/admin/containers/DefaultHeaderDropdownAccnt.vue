@@ -36,7 +36,7 @@ export default {
   },
   methods: {
       logout() {
-          this.$authentication.logOut();
+          this.$auth.logOut();
       }
   },
   data: () => {

@@ -60,7 +60,7 @@
 		},
 		methods: {
 			login() {
-				this.$authentication.logIn(this.form);
+				this.$auth.logIn(this.form);
 			}
 		}
 	}

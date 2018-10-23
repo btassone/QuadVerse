@@ -22,7 +22,7 @@ export default class Authentication {
 	async loggedIn() {
 		let loggedIn = false;
 
-		await axios.get("/api/v1/auth/user", this.headers())
+		await axios.get("/api/v1/auth/user")
 			// If it is still good, send them to the dashboard
 			.then(() => {
 				loggedIn = true;
@@ -77,19 +77,12 @@ export default class Authentication {
 	 * Logs the user out
 	 */
 	logOut() {
-		axios.get("/api/v1/auth/logout", this.headers())
+		axios.get("/api/v1/auth/logout")
 			.then(() => {
 				this.removeAccessToken();
 
 				this.goOnUnauthorized();
 			});
-	}
-
-	/**
-	 * @returns {{headers: {Authorization: string}}}
-	 */
-	headers() {
-		return { headers: { Authorization: `${this.authType} ${this.accessToken}` } }
 	}
 
 	/**
@@ -173,13 +166,13 @@ export default class Authentication {
 	 * @returns {*}
 	 */
 	get accessToken() {
-		return this._accessToken;
+		return axios.defaults.headers.common['Authorization'];
 	}
 
 	/**
 	 * @param value
 	 */
 	set accessToken(value) {
-		this._accessToken = value;
+		axios.defaults.headers.common['Authorization'] = `${this.authType} ${value}`;
 	}
 }

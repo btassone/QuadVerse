@@ -75,7 +75,7 @@
         methods: {
 			// Load all the users in the DB
 			loadUsers() {
-				axios.get('/api/v1/users', this.$authentication.headers())
+				axios.get('/api/v1/users')
                     .then(({data}) => this.userData.items = data.data);
             },
             modalOpen(context, data) {
@@ -87,7 +87,7 @@
 	            }
             },
 			addUser(modal) {
-                this.form.submit('post', '/api/v1/users', this.$authentication.headers())
+                this.form.submit('post', '/api/v1/users')
                     .then(() => {
                     	// Hide the modal
                     	modal.hide();
@@ -97,7 +97,7 @@
                     })
             },
             editUser(modal, user) {
-				this.form.submit('put', `/api/v1/users/${user.id}`, this.$authentication.headers())
+				this.form.submit('put', `/api/v1/users/${user.id}`)
                     .then(() => {
 	                    // Hide the modal
                     	modal.hide();
