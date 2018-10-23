@@ -174,7 +174,7 @@
 	            this.$emit('edit-item', evt, this.$refs.addResourceModal, this.modalDataSet);
             },
 	        // Generate an delete-item custom event
-	        deleteItem(evt) {
+	        deleteItem() {
 		        swal({
 			        title: 'Are you sure?',
 			        text: "You won't be able to revert this!",
