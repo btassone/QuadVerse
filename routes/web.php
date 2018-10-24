@@ -15,4 +15,5 @@ Route::get('/', function () {
     return view('index');
 });
 
+Route::get('/admin/{path}', "IndexController@admin")->where('path', '.*');
 Route::get('{path}', "IndexController@index")->where('path', '.*');

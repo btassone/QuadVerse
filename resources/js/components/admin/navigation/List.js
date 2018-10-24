@@ -12,7 +12,7 @@ export default {
 			children: [
 				{
 					name: 'Users',
-					url: '/admin/account-management/users',
+					url: '/admin/account-management/users/page/1',
 					icon: 'icon-people'
 				},
 				{

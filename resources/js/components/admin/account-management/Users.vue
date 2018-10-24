@@ -6,13 +6,17 @@
                 <crud-table
                         :crud-data="userData"
                         :per-page="perPage"
+                        :items="users"
+                        :current-page="compPageId"
+                        :total-pages="totalPages"
                         resource-icon="fa-users"
                         resource-name="Users"
                         striped
                         @add-item="addUser"
                         @edit-item="editUser"
                         @delete-item="deleteUser"
-                        @modal-open="modalOpen">
+                        @modal-open="modalOpen"
+                        @current-page-change="pageChange">
                     <template slot="modal-content">
                         <form @submit.prevent>
                             <div class="form-group">
@@ -49,10 +53,15 @@
 			HasError,
 			AlertError
 		},
+        props: {
+			pageId: {
+				type: String
+            }
+        },
         data: () => {
 		    return {
+			    users: [],
 			    userData: {
-				    items: [],
 				    fields: [
 					    {key: "id"},
 					    {key: "name"},
@@ -60,23 +69,34 @@
 					    {key: "created_at"}
 				    ]
 			    },
-                perPage: 10,
+                perPage: 8,
                 form: new Form({
                     name: '',
                     email: '',
                     password: ''
-                })
+                }),
+                prevUrl: "",
+                nextUrl: "",
+                totalPages: 999
             }
         },
         created() {
 			// TODO: Fix nav page not properly loading correct one on load
 		    this.loadUsers();
         },
+        computed: {
+		    compPageId() {
+		    	return parseInt(this.pageId);
+            }
+        },
         methods: {
 			// Load all the users in the DB
 			loadUsers() {
-				this.$http.get('/api/v1/users')
-                    .then(({data}) => this.userData.items = data.data);
+				this.$http.get(`/api/v1/users`)
+                    .then(({data}) => {
+	                    this.users = data;
+	                    this.totalPages = Math.ceil(this.users.length / this.perPage);
+                    });
             },
             modalOpen(context, data) {
 	            this.form.reset();
@@ -106,8 +126,12 @@
                     	this.loadUsers();
                     });
             },
-            deleteUser(userId) {
-				this.userData.items = this.userData.items.filter(user => user.id !== userId);
+            deleteUser(id) {
+                this.form.delete(`/api/v1/users/${id}`)
+                    .then(({data}) => console.log(data));
+            },
+            pageChange(to) {
+
             }
         }
 	}

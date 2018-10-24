@@ -3,18 +3,26 @@
 namespace App\Http\Controllers\API;
 
 use App\User;
+use App\Utilities\Pagination;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class UserController extends Controller
 {
-	/**
-	 * @var int
-	 */
-	protected $paginate = 20;
 
+	/**
+	 * Default pagination
+	 *
+	 * @var Pagination
+	 */
+	protected $pagination = null;
+
+	/**
+	 * UserController constructor.
+	 */
 	public function __construct() {
 		$this->middleware('auth:api');
+		$this->pagination = new Pagination(3, 500, 8);
 	}
 
     /**
@@ -22,11 +30,21 @@ class UserController extends Controller
      *
 	 * @param \Illuminate\Http\Request  $request
 	 *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse
      */
     public function index(Request $request)
     {
-		return User::latest()->paginate($this->paginate);
+    	if($request->pagination) {
+			// Get pagination
+			$pagination = $this->pagination->valid( $request->pagination );
+
+			// Get users
+			$users = User::latest()->paginate( $pagination );
+		} else {
+    		$users = User::all();
+		}
+
+		return response()->json($users);
     }
 
     /**
@@ -45,11 +63,13 @@ class UserController extends Controller
 			'password' => 'required|string|min:6'
 		]);
 
-		return User::create([
+		User::create([
 			'name' => $request->name,
 			'email' => $request->email,
 			'password' => bcrypt($request->password)
 		]);
+
+		return response()->json();
     }
 
     /**
@@ -67,15 +87,13 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  User  $user
 	 * @throws
 	 *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-		$user = User::findOrFail($id);
-
 		$this->validate($request, [
 			'name' => 'required|string|min:3',
 			'email' => 'required|string|email|max:80|unique:users,email,'.$user->id,
@@ -84,17 +102,21 @@ class UserController extends Controller
 
 		$user->update($request->all());
 
-		return $user;
+		return response()->json();
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  User  $user
+	 * @throws
+	 *
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+		$user->delete();
+
+		return response()->json();
     }
 }

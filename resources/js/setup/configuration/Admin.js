@@ -29,60 +29,61 @@ export default {
 	routes: [
 		{
 			path: '/admin',
+			redirect: 'login',
 			component: Admin,
-			redirect: '/admin/login',
 			linkActiveClass: 'open active',
 			scrollBehavior: () => ({ y: 0 }),
 			children: [
 				{
-					path: '/admin/login',
-					component: Login,
-					name: 'Login',
-					meta: {
-						authentication: false
-					}
-				},
-				{
-					path: 'dashboard',
+					path: '',
+					redirect: 'dashboard',
 					component: DefaultContainer,
 					name: 'Admin',
-					redirect: '/admin/dashboard',
 					meta: {
 						authentication: true
 					},
 					children: [
 						{
-							path: '',
+							path: 'dashboard',
 							name: 'Dashboard',
 							component: Dashboard
 						},
 						{
-							path: '/admin/account-management',
+							path: 'account-management',
+							redirect: 'account-management/users/page/1',
 							name: 'Account Management',
-							redirect: '/admin/account-management/users',
 							component: {
 								render (c) { return c('router-view') }
 							},
 							children: [
 								{
-									path: '/admin/account-management/users',
+									path: 'users/page/:pageId',
 									name: 'Users',
-									component: Users
+									component: Users,
+									props: true
 								},
 								{
-									path: '/admin/account-management/roles',
+									path: 'roles',
 									name: 'Roles',
 									component: Roles
 								}
 							]
 						}
 					]
+				},
+				{
+					path: 'login',
+					component: Login,
+					name: 'Login',
+					meta: {
+						authentication: false
+					}
 				}
 			]
 		},
 		{
 			path :'*',
-			redirect: '/admin/dashboard'
+			redirect: '/admin'
 		}
 	],
 	plugins: [

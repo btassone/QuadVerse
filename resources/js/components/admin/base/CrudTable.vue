@@ -1,7 +1,7 @@
 <template>
     <b-card>
         <!-- Header template for the b-card -->
-        <template slot="header" :slot-scope="[resourceName, resourceIcon, crudData]">
+        <template slot="header" :slot-scope="[resourceName, resourceIcon]">
             <div class="row">
                 <div class="d-flex col-6 align-items-center">
                     <span>
@@ -21,7 +21,7 @@
                 :small="small"
                 :hover="hover"
                 :fixed="fixed"
-                :items="crudData.items"
+                :items="items"
                 :fields="crudData.fields"
                 :current-page="currentPage"
                 :per-page="perPage"
@@ -38,9 +38,8 @@
                 </div>
             </template>
         </b-table>
-        <nav>
-            <b-pagination-nav base-url="#" :number-of-pages="getPageCount(crudData.items, perPage)" v-model="currentPage" prev-text="Prev" next-text="Next" hide-goto-end-buttons/>
-        </nav>
+        <b-pagination-nav base-url="./" use-router :number-of-pages="totalPages" :value="currentPage" prev-text="Prev" next-text="Next" @input="navChanged">
+        </b-pagination-nav>
         <b-modal
                 ref="resourceModal"
                 ok-variant="success"
@@ -98,15 +97,26 @@
 	        	type: Object,
                 default: {}
             },
+            items: {
+	        	type: Array,
+                default: () => []
+            },
             perPage: {
 	        	type: Number,
                 default: 5
+            },
+            currentPage: {
+	        	type: Number,
+                required: true
+            },
+            totalPages: {
+	        	type: Number,
+                required: true
             }
         },
 		data: () => {
 			return {
 				totalRows: 0,
-                currentPage: 1,
                 context: 'add',
                 modalDataSet: null
 			}
@@ -114,9 +124,6 @@
         created() {
 			// Inject the modify field so its always there
 		    this.crudData.fields.push({key: "modify"});
-
-		    // Set the navigation / url to the correct page for history
-		    this.setPage();
         },
         computed: {
 			// Get the modal title based on the context and resource name
@@ -199,13 +206,8 @@
 	        getPageCount (items, perPage) {
 		        return Math.ceil(items.length / perPage)
 	        },
-            // Set the current page in the url on load
-	        setPage() {
-		        let pageNum = parseInt(this.$route.hash.substr(1));
-
-		        if(pageNum) {
-			        this.currentPage = pageNum;
-		        }
+            navChanged(value) {
+				this.$emit("current-page-change", value);
             }
         }
 	}
