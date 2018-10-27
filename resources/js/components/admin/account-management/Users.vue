@@ -71,9 +71,7 @@
                     email: '',
                     password: ''
                 }),
-                prevUrl: "",
-                nextUrl: "",
-                totalPages: 999
+                totalPages: parseInt(this.pageId)
             }
         },
         computed: {
@@ -110,6 +108,7 @@
                     	// Hide the modal
                     	modal.hide();
 
+	                    // Refresh the table so the provider will kick off
                     	table.refresh();
                     })
             },
@@ -119,6 +118,7 @@
 	                    // Hide the modal
                     	modal.hide();
 
+                    	// Refresh the table so the provider will kick off
 	                    table.refresh();
                     });
             },
