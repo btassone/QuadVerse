@@ -16,18 +16,16 @@
             </div>
         </template>
         <b-table
-                :striped="striped"
-                :bordered="bordered"
-                :small="small"
-                :hover="hover"
-                :fixed="fixed"
+                ref="bTable"
                 :items="items"
                 :fields="fields"
                 :current-page="currentPage"
                 :per-page="perPage"
                 class="table-align-middle"
-                ref="bTable"
-                responsive>
+                stacked="md"
+                responsive
+                striped
+                v-bind="options">
             <template slot="modify" slot-scope="{ item }">
                 <div class="d-flex align-items-center">
                     <button class="btn btn-primary m-1" @click="openModal('edit', item)">
@@ -39,7 +37,7 @@
                 </div>
             </template>
         </b-table>
-        <b-pagination-nav base-url="./" use-router :number-of-pages="totalPages" v-model="currentPage" prev-text="Prev" next-text="Next" @input="navChanged">
+        <b-pagination-nav base-url="./" use-router :number-of-pages="totalPages" v-model="currentPage" prev-text="Prev" next-text="Next">
         </b-pagination-nav>
         <b-modal
                 ref="resourceModal"
@@ -66,37 +64,22 @@
 	export default {
 		name: 'crud-table',
         props: {
-	        hover: {
-		        type: Boolean,
-		        default: false
-	        },
-	        striped: {
-		        type: Boolean,
-		        default: false
-	        },
-	        bordered: {
-		        type: Boolean,
-		        default: false
-	        },
-	        small: {
-		        type: Boolean,
-		        default: false
-	        },
-	        fixed: {
-		        type: Boolean,
-		        default: false
-	        },
-		    resourceName: {
-			    type: String,
-			    default: 'Resource'
-		    },
-            resourceIcon: {
-		    	type: String,
-                default: 'fa-align-justify'
+	        options: {
+		        type: Object,
+                default: {}
             },
             items: {
-	        	type: Function
+	        	type: Function,
+                required: true
             },
+	        currentPage: {
+		        type: Number,
+		        required: true
+	        },
+	        totalPages: {
+		        type: Number,
+		        required: true
+	        },
             fields: {
 	            type: Array,
                 default: () => []
@@ -105,14 +88,14 @@
 	        	type: Number,
                 default: 5
             },
-            currentPage: {
-	        	type: Number,
-                required: true
-            },
-            totalPages: {
-	        	type: Number,
-                required: true
-            }
+	        resourceName: {
+		        type: String,
+		        default: 'Resource'
+	        },
+	        resourceIcon: {
+		        type: String,
+		        default: 'fa-align-justify'
+	        }
         },
 		data: () => {
 			return {
@@ -204,10 +187,7 @@
             // Get the page count
 	        getPageCount (items, perPage) {
 		        return Math.ceil(items.length / perPage)
-	        },
-            navChanged(value) {
-				this.$emit("current-page-change", value);
-            }
+	        }
         }
 	}
 </script>

@@ -9,9 +9,9 @@
                         :items="loadUsers"
                         :current-page="compPageId"
                         :total-pages="totalPages"
+                        :options="options"
                         resource-icon="fa-users"
                         resource-name="Users"
-                        striped
                         @add-item="addUser"
                         @edit-item="editUser"
                         @delete-item="deleteUser"
@@ -57,33 +57,39 @@
 				type: String
             }
         },
-        data: () => {
-		    return {
-			    fields: [
-				    {key: "id"},
-				    {key: "name"},
-				    {key: "email"},
-				    {key: "created_at"}
-			    ],
-                perPage: 5,
-                form: new Form({
-                    name: '',
-                    email: '',
-                    password: ''
-                }),
-                totalPages: parseInt(this.pageId)
-            }
-        },
-        computed: {
-		    compPageId() {
-		    	return parseInt(this.pageId);
-            }
-        },
-        methods: {
+		data: () => {
+			return {
+				fields: [
+					{key: "id", sortable: true},
+					{key: "name", sortable: true},
+					{key: "email", sortable: true},
+					{key: "created_at", sortable: true}
+				],
+				form: new Form({
+					name: '',
+					email: '',
+					password: ''
+				}),
+                options: {
+	                sortBy: 'id',
+	                sortDesc: false
+                },
+				perPage: 5,
+				totalPages: parseInt(this.pageId)
+			}
+		},
+		computed: {
+			compPageId() {
+				return parseInt(this.pageId);
+			}
+		},
+		methods: {
 			// Load all the users in the DB
 			loadUsers(ctx) {
 				let params = `pagination=${ctx.perPage}&page[number]=${ctx.currentPage}`;
 				let promise = this.$http.get(`/api/v1/users?${params}`);
+
+				console.log(ctx);
 
 				return promise.then(({data}) => {
 					let users = data.data;
@@ -92,40 +98,44 @@
 					this.totalPages = Math.ceil(total / this.perPage);
 
 					return(users || []);
-                })
-            },
-            modalOpen(context, data) {
-	            this.form.reset();
-	            this.form.clear();
+				})
+			},
+            // Clear / reset the form and fill it with data if need be
+			modalOpen(context, data) {
+				this.form.reset();
+				this.form.clear();
 
-	            if(context === 'edit') {
-		            this.form.fill(data);
-	            }
-            },
+				if(context === 'edit') {
+					this.form.fill(data);
+				}
+			},
+            // Add user to the database
 			addUser(modal, table) {
-                this.form.post('/api/v1/users')
-                    .then(() => {
-                    	// Hide the modal
-                    	modal.hide();
+				this.form.post('/api/v1/users')
+					.then(() => {
+						// Hide the modal
+						modal.hide();
 
-	                    // Refresh the table so the provider will kick off
-                    	table.refresh();
-                    })
-            },
-            editUser(modal, table, user) {
+						// Refresh the table so the provider will kick off
+						table.refresh();
+					})
+			},
+            // Edit the current user selected
+			editUser(modal, table, user) {
 				this.form.put(`/api/v1/users/${user.id}`)
-                    .then(() => {
-	                    // Hide the modal
-                    	modal.hide();
+					.then(() => {
+						// Hide the modal
+						modal.hide();
 
-                    	// Refresh the table so the provider will kick off
-	                    table.refresh();
-                    });
-            },
-            deleteUser(table, id) {
-                this.form.delete(`/api/v1/users/${id}`)
-                    .then(() => table.refresh());
-            }
-        }
+						// Refresh the table so the provider will kick off
+						table.refresh();
+					});
+			},
+            // Delete the selected user
+			deleteUser(table, id) {
+				this.form.delete(`/api/v1/users/${id}`)
+					.then(() => table.refresh());
+			}
+		}
 	}
 </script>
