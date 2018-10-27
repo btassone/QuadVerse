@@ -59,26 +59,27 @@
         },
 		data: () => {
 			return {
+				totalPages: parseInt(this.pageId),
 				fields: [
 					{key: "id", sortable: true},
 					{key: "name", sortable: true},
 					{key: "email", sortable: true},
 					{key: "created_at", sortable: true}
 				],
+				options: {
+					sortBy: 'id',
+					sortDesc: false
+				},
+				perPage: 5,
 				form: new Form({
 					name: '',
 					email: '',
 					password: ''
-				}),
-                options: {
-	                sortBy: 'id',
-	                sortDesc: false
-                },
-				perPage: 5,
-				totalPages: parseInt(this.pageId)
+				})
 			}
 		},
 		computed: {
+			// Parse the integer and return the pageId
 			compPageId() {
 				return parseInt(this.pageId);
 			}

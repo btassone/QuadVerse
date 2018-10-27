@@ -64,10 +64,6 @@
 	export default {
 		name: 'crud-table',
         props: {
-	        options: {
-		        type: Object,
-                default: {}
-            },
             items: {
 	        	type: Function,
                 required: true
@@ -80,10 +76,14 @@
 		        type: Number,
 		        required: true
 	        },
-            fields: {
-	            type: Array,
-                default: () => []
-            },
+	        fields: {
+		        type: Array,
+		        required: true
+	        },
+	        options: {
+		        type: Object,
+		        default: {}
+	        },
             perPage: {
 	        	type: Number,
                 default: 5
