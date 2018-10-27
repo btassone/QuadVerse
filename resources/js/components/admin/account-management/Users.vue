@@ -46,6 +46,37 @@
     import { HasError } from "vform";
     import { AlertError } from "vform";
 
+    // Keys are the context keys mapped to the string to pass in the request
+    const PAGINATION_PARAMS_MAP = {
+        perPage: "pagination",
+        currentPage: "page[number]",
+        sortBy: "sort[by]",
+        sortDesc: "sort[desc]"
+    };
+
+    function getParamsString(param_map, value_map) {
+	    let out = "";
+	    let value_keys = Object.keys(value_map);
+
+	    // Loop over the key values
+	    value_keys.forEach((key, index) => {
+
+	    	// If the value isn't undefined, null, or empty
+	    	if(value_map[key] !== undefined && value_map[key] !== null && value_map[key] !== "") {
+
+	    		// If first one, skip the &
+			    if(index !== 0)
+				    out += '&';
+
+			    // Add the param name and value with an = symbol in between
+			    out += `${param_map[key]}=${value_map[key]}`;
+		    }
+        });
+
+	    // Return the param string
+	    return out;
+    }
+
 	export default {
 		components: {
 			CrudTable,
@@ -87,10 +118,8 @@
 		methods: {
 			// Load all the users in the DB
 			loadUsers(ctx) {
-				let params = `pagination=${ctx.perPage}&page[number]=${ctx.currentPage}`;
+				let params = getParamsString(PAGINATION_PARAMS_MAP, ctx);
 				let promise = this.$http.get(`/api/v1/users?${params}`);
-
-				console.log(ctx);
 
 				return promise.then(({data}) => {
 					let users = data.data;
