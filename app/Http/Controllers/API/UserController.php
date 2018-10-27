@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\API;
 
 use App\User;
-use App\Utilities\Pagination;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -11,18 +10,10 @@ class UserController extends Controller
 {
 
 	/**
-	 * Default pagination
-	 *
-	 * @var Pagination
-	 */
-	protected $pagination = null;
-
-	/**
 	 * UserController constructor.
 	 */
 	public function __construct() {
 		$this->middleware('auth:api');
-		$this->pagination = new Pagination(3, 500, 8);
 	}
 
     /**
@@ -34,12 +25,10 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-    	if($request->pagination) {
-			// Get pagination
-			$pagination = $this->pagination->valid( $request->pagination );
+    	$pagination = ($request->pagination) ? $request->pagination : 0;
 
-			// Get users
-			$users = User::latest()->paginate( $pagination );
+    	if($pagination) {
+			$users = User::latest()->jsonPaginate( $pagination );
 		} else {
     		$users = User::all();
 		}
@@ -102,7 +91,7 @@ class UserController extends Controller
 
 		$user->update($request->all());
 
-		return response()->json();
+		return response()->json($user);
     }
 
     /**

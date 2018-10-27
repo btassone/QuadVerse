@@ -4,9 +4,9 @@
         <b-row>
             <b-col lg="12">
                 <crud-table
-                        :crud-data="userData"
+                        :fields="fields"
                         :per-page="perPage"
-                        :items="users"
+                        :items="loadUsers"
                         :current-page="compPageId"
                         :total-pages="totalPages"
                         resource-icon="fa-users"
@@ -15,8 +15,7 @@
                         @add-item="addUser"
                         @edit-item="editUser"
                         @delete-item="deleteUser"
-                        @modal-open="modalOpen"
-                        @current-page-change="pageChange">
+                        @modal-open="modalOpen">
                     <template slot="modal-content">
                         <form @submit.prevent>
                             <div class="form-group">
@@ -60,16 +59,13 @@
         },
         data: () => {
 		    return {
-			    users: [],
-			    userData: {
-				    fields: [
-					    {key: "id"},
-					    {key: "name"},
-					    {key: "email"},
-					    {key: "created_at"}
-				    ]
-			    },
-                perPage: 8,
+			    fields: [
+				    {key: "id"},
+				    {key: "name"},
+				    {key: "email"},
+				    {key: "created_at"}
+			    ],
+                perPage: 5,
                 form: new Form({
                     name: '',
                     email: '',
@@ -80,10 +76,6 @@
                 totalPages: 999
             }
         },
-        created() {
-			// TODO: Fix nav page not properly loading correct one on load
-		    this.loadUsers();
-        },
         computed: {
 		    compPageId() {
 		    	return parseInt(this.pageId);
@@ -91,12 +83,18 @@
         },
         methods: {
 			// Load all the users in the DB
-			loadUsers() {
-				this.$http.get(`/api/v1/users`)
-                    .then(({data}) => {
-	                    this.users = data;
-	                    this.totalPages = Math.ceil(this.users.length / this.perPage);
-                    });
+			loadUsers(ctx) {
+				let params = `pagination=${ctx.perPage}&page[number]=${ctx.currentPage}`;
+				let promise = this.$http.get(`/api/v1/users?${params}`);
+
+				return promise.then(({data}) => {
+					let users = data.data;
+					let total = data.total;
+
+					this.totalPages = Math.ceil(total / this.perPage);
+
+					return(users || []);
+                })
             },
             modalOpen(context, data) {
 	            this.form.reset();
@@ -106,32 +104,27 @@
 		            this.form.fill(data);
 	            }
             },
-			addUser(modal) {
+			addUser(modal, table) {
                 this.form.post('/api/v1/users')
                     .then(() => {
                     	// Hide the modal
                     	modal.hide();
 
-                    	// Update the user list
-                        this.loadUsers();
+                    	table.refresh();
                     })
             },
-            editUser(modal, user) {
+            editUser(modal, table, user) {
 				this.form.put(`/api/v1/users/${user.id}`)
                     .then(() => {
 	                    // Hide the modal
                     	modal.hide();
 
-	                    // Update the user list
-                    	this.loadUsers();
+	                    table.refresh();
                     });
             },
-            deleteUser(id) {
+            deleteUser(table, id) {
                 this.form.delete(`/api/v1/users/${id}`)
-                    .then(({data}) => console.log(data));
-            },
-            pageChange(to) {
-
+                    .then(() => table.refresh());
             }
         }
 	}

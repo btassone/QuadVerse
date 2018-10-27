@@ -15,6 +15,9 @@ import DefaultContainer from "../../components/admin/containers/DefaultContainer
 import Users from "../../components/admin/account-management/Users";
 import Roles from "../../components/admin/account-management/Roles";
 
+// Development
+import PaginationTable from "../../components/admin/development/PaginationTable";
+
 // Auth paths for authenticated and un-authenticated users
 export const AdminAuthPaths = {
 	login: { name: 'Admin' },
@@ -66,6 +69,22 @@ export default {
 									path: 'roles',
 									name: 'Roles',
 									component: Roles
+								}
+							]
+						},
+						{
+							path: 'development',
+							redirect: 'development/pagination/page/1',
+							name: 'Development',
+							component: {
+								render (c) { return c('router-view') }
+							},
+							children: [
+								{
+									path: 'pagination/page/:pageId',
+									name: 'Pagination Table',
+									component: PaginationTable,
+									props: true
 								}
 							]
 						}

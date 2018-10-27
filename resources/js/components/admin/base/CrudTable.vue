@@ -1,7 +1,7 @@
 <template>
     <b-card>
         <!-- Header template for the b-card -->
-        <template slot="header" :slot-scope="[resourceName, resourceIcon]">
+        <template slot="header">
             <div class="row">
                 <div class="d-flex col-6 align-items-center">
                     <span>
@@ -22,10 +22,11 @@
                 :hover="hover"
                 :fixed="fixed"
                 :items="items"
-                :fields="crudData.fields"
+                :fields="fields"
                 :current-page="currentPage"
                 :per-page="perPage"
                 class="table-align-middle"
+                ref="bTable"
                 responsive>
             <template slot="modify" slot-scope="{ item }">
                 <div class="d-flex align-items-center">
@@ -38,7 +39,7 @@
                 </div>
             </template>
         </b-table>
-        <b-pagination-nav base-url="./" use-router :number-of-pages="totalPages" :value="currentPage" prev-text="Prev" next-text="Next" @input="navChanged">
+        <b-pagination-nav base-url="./" use-router :number-of-pages="totalPages" v-model="currentPage" prev-text="Prev" next-text="Next" @input="navChanged">
         </b-pagination-nav>
         <b-modal
                 ref="resourceModal"
@@ -93,12 +94,11 @@
 		    	type: String,
                 default: 'fa-align-justify'
             },
-            crudData: {
-	        	type: Object,
-                default: {}
-            },
             items: {
-	        	type: Array,
+	        	type: Function
+            },
+            fields: {
+	            type: Array,
                 default: () => []
             },
             perPage: {
@@ -116,14 +116,13 @@
         },
 		data: () => {
 			return {
-				totalRows: 0,
                 context: 'add',
                 modalDataSet: null
 			}
 		},
         created() {
 			// Inject the modify field so its always there
-		    this.crudData.fields.push({key: "modify"});
+		    this.fields.push({key: "modify"});
         },
         computed: {
 			// Get the modal title based on the context and resource name
@@ -178,13 +177,13 @@
 				evt.preventDefault();
 
 	        	// Emit the event
-				this.$emit('add-item', this.$refs.resourceModal);
+				this.$emit('add-item', this.$refs.resourceModal, this.$refs.bTable);
             },
 	        // Generate an edit-item custom event
             editItem(evt) {
 	            evt.preventDefault();
 
-	            this.$emit('edit-item', this.$refs.resourceModal, this.modalDataSet);
+	            this.$emit('edit-item', this.$refs.resourceModal, this.$refs.bTable, this.modalDataSet);
             },
 	        // Generate an delete-item custom event
 	        deleteItem() {
@@ -198,7 +197,7 @@
 			        confirmButtonText: 'Yes, delete it!'
 		        }).then((result) => {
 			        if(result.value) {
-				        this.$emit('delete-item', this.modalDataSet);
+				        this.$emit('delete-item', this.$refs.bTable, this.modalDataSet);
 			        }
 		        });
             },
