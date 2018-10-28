@@ -1,6 +1,5 @@
 <template>
     <b-card>
-        <!-- Header template for the b-card -->
         <template slot="header">
             <div class="row">
                 <div class="d-flex col-6 align-items-center">
@@ -23,6 +22,7 @@
                 :per-page="perPage"
                 class="table-align-middle"
                 stacked="md"
+                @refreshed="tableRefreshed"
                 responsive
                 striped
                 v-bind="options">
@@ -37,7 +37,15 @@
                 </div>
             </template>
         </b-table>
-        <b-pagination-nav base-url="./" use-router :number-of-pages="totalPages" v-model="currentPage" prev-text="Prev" next-text="Next">
+        <b-pagination-nav
+                base-url="./"
+                :number-of-pages="totalPages"
+                :value="currentPage"
+                prev-text="Prev"
+                next-text="Next"
+                ref="bPageNav"
+                @input="navChanged"
+                use-router>
         </b-pagination-nav>
         <b-modal
                 ref="resourceModal"
@@ -184,10 +192,21 @@
 			        }
 		        });
             },
-            // Get the page count
-	        getPageCount (items, perPage) {
-		        return Math.ceil(items.length / perPage)
-	        }
+            // The table has been refreshed when it has emit an event
+	        tableRefreshed() {
+                this.$emit("table-refreshed", this.$refs.bTable);
+            },
+            // The navigation has changed, emit a custom event and fix buggy nav
+	        navChanged(page) {
+		        /**
+                 * Set the current page on the nav to whatever the pageId is. This is needed because
+                 * in some scenarios the nav jumps ahead of the actual table page and breaks the nav
+		         */
+				this.$refs.bPageNav.currentPage = parseInt(this.$route.params.pageId);
+
+		        // Emit custom event in case anything needs to be done on nav change
+				this.$emit("table-nav-changed", page, this.$refs.bPageNav);
+            }
         }
 	}
 </script>

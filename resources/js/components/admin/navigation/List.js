@@ -21,18 +21,6 @@ export default {
 					icon: 'icon-layers'
 				}
 			]
-		},
-		{
-			name: 'Development',
-			url: '/admin/development',
-			icon: 'icon-calculator',
-			children: [
-				{
-					name: 'Pagination Table',
-					url: '/admin/development/pagination/page/1',
-					icon: 'icon-list'
-				}
-			]
 		}
 	]
 }

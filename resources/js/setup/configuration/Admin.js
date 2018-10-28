@@ -71,22 +71,6 @@ export default {
 									component: Roles
 								}
 							]
-						},
-						{
-							path: 'development',
-							redirect: 'development/pagination/page/1',
-							name: 'Development',
-							component: {
-								render (c) { return c('router-view') }
-							},
-							children: [
-								{
-									path: 'pagination/page/:pageId',
-									name: 'Pagination Table',
-									component: PaginationTable,
-									props: true
-								}
-							]
 						}
 					]
 				},
