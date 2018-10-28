@@ -105,7 +105,7 @@
 		},
         created() {
 			// Inject the modify field so its always there
-		    this.fields.push({key: "modify"});
+		    this.fields.push({ key: "modify", thStyle: { width: "1px" } });
         },
         computed: {
 			// Get the modal title based on the context and resource name

@@ -70,14 +70,15 @@
 			return {
 				totalPages: parseInt(this.pageId),
 				fields: [
-					{key: "id", sortable: true},
-					{key: "name", sortable: true},
-					{key: "email", sortable: true},
-					{key: "created_at", sortable: true}
+					{ key: "id", sortable: true, thStyle: { width: "80px" } },
+					{ key: "name", sortable: true },
+					{ key: "email", sortable: true },
+					{ key: "created_at", sortable: true }
 				],
 				options: {
 					sortBy: 'id',
-					sortDesc: false
+					sortDesc: false,
+                    bordered: true
 				},
 				perPage: 5,
 				form: new Form({
@@ -98,8 +99,6 @@
 			loadUsers(ctx) {
 				let params = getParamsString(PAGINATION_PARAMS_MAP, ctx);
 				let promise = this.$http.get(`/api/v1/users?${params}`);
-
-				console.log(params);
 
 				return promise.then(({data}) => {
 					let users = data.data;
