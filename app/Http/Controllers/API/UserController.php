@@ -26,11 +26,24 @@ class UserController extends Controller
     public function index(Request $request)
     {
     	$pagination = ($request->pagination) ? $request->pagination : 0;
+    	$sortBy = null;
+    	$sortDesc = 'asc';
+
+    	if($request->sort) {
+			$sortBy   = ( !empty($request->sort["by"]) ) ? $request->sort["by"] : null;
+			$sortDesc = ( $request->sort["desc"] != "false" ) ? 'desc' : 'asc';
+		}
 
     	if($pagination) {
-			$users = User::latest()->jsonPaginate( $pagination );
+    		if($sortBy) {
+    			$users = User::orderBy($sortBy, $sortDesc)->jsonPaginate( $pagination );
+			} else {
+				$users = User::oldest()->jsonPaginate( $pagination );
+			}
 		} else {
-    		$users = User::all();
+    		$users = [
+    			"data" => User::all()
+			];
 		}
 
 		return response()->json($users);

@@ -42,6 +42,7 @@
 </template>
 <script>
     import CrudTable from "../base/CrudTable";
+    import { getParamsString } from "../../../functions/Global";
     import Form from "vform";
     import { HasError } from "vform";
     import { AlertError } from "vform";
@@ -53,29 +54,6 @@
         sortBy: "sort[by]",
         sortDesc: "sort[desc]"
     };
-
-    function getParamsString(param_map, value_map) {
-	    let out = "";
-	    let value_keys = Object.keys(value_map);
-
-	    // Loop over the key values
-	    value_keys.forEach((key, index) => {
-
-	    	// If the value isn't undefined, null, or empty
-	    	if(value_map[key] !== undefined && value_map[key] !== null && value_map[key] !== "") {
-
-	    		// If first one, skip the &
-			    if(index !== 0)
-				    out += '&';
-
-			    // Add the param name and value with an = symbol in between
-			    out += `${param_map[key]}=${value_map[key]}`;
-		    }
-        });
-
-	    // Return the param string
-	    return out;
-    }
 
 	export default {
 		components: {
@@ -120,6 +98,8 @@
 			loadUsers(ctx) {
 				let params = getParamsString(PAGINATION_PARAMS_MAP, ctx);
 				let promise = this.$http.get(`/api/v1/users?${params}`);
+
+				console.log(params);
 
 				return promise.then(({data}) => {
 					let users = data.data;
