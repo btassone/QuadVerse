@@ -41,12 +41,15 @@
     </div>
 </template>
 <script>
-    import CrudTable from "../base/CrudTable";
-    import Form from "vform";
-    import { getParamsString } from "../../../functions/Global";
-    import { PAGINATION_PARAMS_MAP } from "../../../functions/Global";
-    import { HasError } from "vform";
-    import { AlertError } from "vform";
+    import CrudTable                        from "../base/CrudTable";
+    import { getParamsString }              from "../../../functions/Global";
+    import { PAGINATION_PARAMS_MAP }        from "../../../functions/Global";
+    import formatDate                       from "../../../filters/FormatDate";
+    import Form                             from "vform";
+    import { HasError }                     from "vform";
+    import { AlertError }                   from "vform";
+
+    const dateFormat = 'MMMM Do YYYY';
 
 	export default {
 		components: {
@@ -61,24 +64,38 @@
         },
 		data: () => {
 			return {
-				totalPages: parseInt(this.pageId),
 				fields: [
-					{ key: "id", sortable: true, thStyle: { width: "80px" } },
-					{ key: "name", sortable: true },
-					{ key: "email", sortable: true },
-					{ key: "created_at", sortable: true }
+					{
+						key: "id",
+                        sortable: true,
+                        thStyle: { width: "80px" }
+                    },
+					{
+						key: "name",
+                        sortable: true
+                    },
+					{
+						key: "email",
+                        sortable: true
+                    },
+					{
+						key: "created_at",
+                        sortable: true,
+                        formatter: value => formatDate(value, dateFormat)
+					}
 				],
 				options: {
 					sortBy: 'id',
 					sortDesc: false,
                     bordered: true
 				},
-				perPage: 5,
 				form: new Form({
 					name: '',
 					email: '',
 					password: ''
-				})
+				}),
+				perPage: 5,
+				totalPages: parseInt(this.pageId)
 			}
 		},
 		computed: {
@@ -101,15 +118,6 @@
 
 					return(users || []);
 				})
-			},
-            // Clear / reset the form and fill it with data if need be
-			modalOpen(context, data) {
-				this.form.reset();
-				this.form.clear();
-
-				if(context === 'edit') {
-					this.form.fill(data);
-				}
 			},
             // Add user to the database
 			addUser(modal, table) {
@@ -137,6 +145,15 @@
 			deleteUser(table, id) {
 				this.form.delete(`/api/v1/users/${id}`)
 					.then(() => table.refresh());
+			},
+			// Clear / reset the form and fill it with data if need be
+			modalOpen(context, data) {
+				this.form.reset();
+				this.form.clear();
+
+				if(context === 'edit') {
+					this.form.fill(data);
+				}
 			}
 		}
 	}

@@ -1,13 +1,24 @@
+<style scoped>
+    .search-input {
+        max-width: 300px;
+    }
+</style>
 <template>
     <b-card>
         <template slot="header">
             <div class="row">
-                <div class="d-flex col-6 align-items-center">
+                <div class="d-flex col-4 align-items-center">
                     <span>
                         <i class='fa' :class="resourceIcon"></i> {{resourceName}} List
                     </span>
                 </div>
-                <div class="d-flex col-6 justify-content-end">
+                <div class="d-flex col-8 justify-content-end">
+                    <b-form-input v-model="searchText"
+                                    type="text"
+                                    placeholder="Search"
+                                    class="search-input mr-2"
+                                    @change="searchChanged">
+                    </b-form-input>
                     <b-button variant="success" @click="openModal('add')">
                         <i class="fa fa-plus"></i> Add {{resourceName}}
                     </b-button>
@@ -18,6 +29,7 @@
                 ref="bTable"
                 :items="items"
                 :fields="fields"
+                :filter="filterText"
                 :current-page="currentPage"
                 :per-page="perPage"
                 class="table-align-middle"
@@ -60,7 +72,7 @@
     </b-card>
 </template>
 <script>
-	import swal from "sweetalert2";
+	import swal                             from "sweetalert2";
 
     // Modal contexts and titles
     const MODAL_CONTEXTS = {
@@ -108,7 +120,9 @@
 		data: () => {
 			return {
                 context: 'add',
-                modalDataSet: null
+                modalDataSet: null,
+				searchText: '',
+                filterText: ''
 			}
 		},
         created() {
@@ -141,12 +155,15 @@
 				// Show the modal
 				this.$refs.resourceModal.show();
 
+				// Emit the modal-open event
 				this.$emit('modal-open', this.context, this.modalDataSet);
             },
             // Open the delete dialog modal (yes, no)
             openDeleteDialogModal(context, data) {
+				// Setup the context for the CRUD events
 	            this.setupContext(context, data);
 
+	            // Fire the context associated event
 	            this.contextItem();
             },
             // Switch the context according to what is set and fire the action with the data
@@ -206,6 +223,9 @@
 
 		        // Emit custom event in case anything needs to be done on nav change
 				this.$emit("table-nav-changed", page, this.$refs.bPageNav);
+            },
+	        searchChanged(value) {
+				console.log(value);
             }
         }
 	}
