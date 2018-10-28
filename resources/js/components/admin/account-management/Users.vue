@@ -42,18 +42,11 @@
 </template>
 <script>
     import CrudTable from "../base/CrudTable";
-    import { getParamsString } from "../../../functions/Global";
     import Form from "vform";
+    import { getParamsString } from "../../../functions/Global";
+    import { PAGINATION_PARAMS_MAP } from "../../../functions/Global";
     import { HasError } from "vform";
     import { AlertError } from "vform";
-
-    // Keys are the context keys mapped to the string to pass in the request
-    const PAGINATION_PARAMS_MAP = {
-        perPage: "pagination",
-        currentPage: "page[number]",
-        sortBy: "sort[by]",
-        sortDesc: "sort[desc]"
-    };
 
 	export default {
 		components: {

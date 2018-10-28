@@ -1,3 +1,11 @@
+// Keys are the context keys mapped to the string to pass in the request
+export const PAGINATION_PARAMS_MAP = {
+	perPage: "pagination",
+	currentPage: "page[number]",
+	sortBy: "sort[by]",
+	sortDesc: "sort[desc]"
+};
+
 export function getParamsString(param_map, value_map) {
 	let out = "";
 	let value_keys = Object.keys(value_map);
