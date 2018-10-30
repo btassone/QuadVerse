@@ -266,6 +266,7 @@
 			        this.searchText = value;
 		        }, this.searchTimeoutLength);
             },
+            // Set the url parameters prior to data grab
             contextChanged(ctx) {
 	            let params = getParamsString(PAGINATION_PARAMS_MAP, ctx);
 	            params = addFilterableColumns(params, this.fields);
