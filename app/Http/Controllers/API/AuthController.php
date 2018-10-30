@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Providers\AuthServiceProvider;
 use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -139,12 +140,13 @@ class AuthController extends Controller
 
 		// Set the user response data
 		$userData = json_decode($userResponse->getContent());
+		$refreshTokenExpiresIn = AuthServiceProvider::$refreshTokensExpireIn*24*60;
 
 		// Create a refresh token cookie
 		Cookie::queue(
 			'refresh_token',
 			$data->refresh_token,
-			1209600, // 14 days
+			$refreshTokenExpiresIn,
 			null,
 			\Illuminate\Support\Facades\Request::getHost(),
 			false,
