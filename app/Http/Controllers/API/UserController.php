@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\User;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -28,18 +29,40 @@ class UserController extends Controller
     	$pagination = ($request->pagination) ? $request->pagination : 0;
     	$sortBy = null;
     	$sortDesc = 'asc';
+    	$filter = '';
+    	$filter_columns = '';
+
+    	if($request->filter) {
+			$filter = $request->filter;
+			$filter_columns = $request->filter_columns;
+		}
 
     	if($request->sort) {
 			$sortBy   = ( !empty($request->sort["by"]) ) ? $request->sort["by"] : null;
 			$sortDesc = ( $request->sort["desc"] != "false" ) ? 'desc' : 'asc';
 		}
 
+		$users = User::query();
+
     	if($pagination) {
-    		if($sortBy) {
-    			$users = User::orderBy($sortBy, $sortDesc)->jsonPaginate( $pagination );
-			} else {
-				$users = User::oldest()->jsonPaginate( $pagination );
+
+			if($filter != '') {
+
+				foreach($filter_columns as $key => $column) {
+					if($key == 0) {
+						$users = $users->where($column, 'like', "%{$filter}%");
+					}
+					$users = $users->orWhere($column, 'like', "%{$filter}%");
+				}
 			}
+
+			if($sortBy) {
+				$users = $users->orderBy($sortBy, $sortDesc);
+			} else {
+				$users = $users->oldest();
+			}
+
+			$users = $users->jsonPaginate( $pagination );
 		} else {
     		$users = [
     			"data" => User::all()

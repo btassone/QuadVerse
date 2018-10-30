@@ -15,7 +15,8 @@
                         @add-item="addUser"
                         @edit-item="editUser"
                         @delete-item="deleteUser"
-                        @modal-open="modalOpen">
+                        @modal-open="modalOpen"
+                        @table-context-changed="setParams">
                     <template slot="modal-content">
                         <form @submit.prevent>
                             <div class="form-group">
@@ -42,8 +43,6 @@
 </template>
 <script>
     import CrudTable                        from "../base/CrudTable";
-    import { getParamsString }              from "../../../functions/Global";
-    import { PAGINATION_PARAMS_MAP }        from "../../../functions/Global";
     import formatDate                       from "../../../filters/FormatDate";
     import Form                             from "vform";
     import { HasError }                     from "vform";
@@ -72,15 +71,18 @@
                     },
 					{
 						key: "name",
-                        sortable: true
+                        sortable: true,
+                        filterable: true
                     },
 					{
 						key: "email",
-                        sortable: true
+                        sortable: true,
+						filterable: true
                     },
 					{
 						key: "created_at",
                         sortable: true,
+						filterable: true,
                         formatter: value => formatDate(value, dateFormat)
 					}
 				],
@@ -95,20 +97,21 @@
 					password: ''
 				}),
 				perPage: 5,
-				totalPages: parseInt(this.pageId)
+				totalPages: parseInt(this.pageId),
+                params: '',
+                apiUrl: '/api/v1/users'
 			}
 		},
 		computed: {
 			// Parse the integer and return the pageId
 			compPageId() {
-				return parseInt(this.pageId);
+                return parseInt(this.pageId);
 			}
 		},
 		methods: {
 			// Load all the users in the DB
-			loadUsers(ctx) {
-				let params = getParamsString(PAGINATION_PARAMS_MAP, ctx);
-				let promise = this.$http.get(`/api/v1/users?${params}`);
+			loadUsers() {
+				let promise = this.$http.get(`${this.apiUrl}?${this.params}`);
 
 				return promise.then(({data}) => {
 					let users = data.data;
@@ -121,7 +124,7 @@
 			},
             // Add user to the database
 			addUser(modal, table) {
-				this.form.post('/api/v1/users')
+				this.form.post(this.apiUrl)
 					.then(() => {
 						// Hide the modal
 						modal.hide();
@@ -132,7 +135,7 @@
 			},
             // Edit the current user selected
 			editUser(modal, table, user) {
-				this.form.put(`/api/v1/users/${user.id}`)
+				this.form.put(`${this.apiUrl}/${user.id}`)
 					.then(() => {
 						// Hide the modal
 						modal.hide();
@@ -143,7 +146,7 @@
 			},
             // Delete the selected user
 			deleteUser(table, id) {
-				this.form.delete(`/api/v1/users/${id}`)
+				this.form.delete(`${this.apiUrl}/${id}`)
 					.then(() => table.refresh());
 			},
 			// Clear / reset the form and fill it with data if need be
@@ -154,7 +157,11 @@
 				if(context === 'edit') {
 					this.form.fill(data);
 				}
-			}
+			},
+            // Sets the params based on the fields.
+            setParams(ctx, params) {
+				this.params = params;
+            }
 		}
 	}
 </script>

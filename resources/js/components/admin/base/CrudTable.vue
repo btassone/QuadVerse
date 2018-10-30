@@ -13,12 +13,10 @@
                     </span>
                 </div>
                 <div class="d-flex col-8 justify-content-end">
-                    <b-form-input v-model="searchText"
-                                    type="text"
-                                    placeholder="Search"
-                                    class="search-input mr-2"
-                                    @change="searchChanged">
-                    </b-form-input>
+                    <input
+                            @input="filterResults"
+                            placeholder="Search"
+                            class="search-input mr-2 form-control"/>
                     <b-button variant="success" @click="openModal('add')">
                         <i class="fa fa-plus"></i> Add {{resourceName}}
                     </b-button>
@@ -29,12 +27,16 @@
                 ref="bTable"
                 :items="items"
                 :fields="fields"
-                :filter="filterText"
+                :filter="searchText"
                 :current-page="currentPage"
                 :per-page="perPage"
+                empty-text="There are no records to show"
+                empty-filtered-text="There are no records matching your request"
                 class="table-align-middle"
                 stacked="md"
                 @refreshed="tableRefreshed"
+                @context-changed="contextChanged"
+                show-empty
                 responsive
                 striped
                 v-bind="options">
@@ -73,6 +75,9 @@
 </template>
 <script>
 	import swal                             from "sweetalert2";
+	import { getParamsString }              from "../../../functions/Global";
+	import { addFilterableColumns }         from "../../../functions/Global";
+	import { PAGINATION_PARAMS_MAP }        from "../../../functions/Global";
 
     // Modal contexts and titles
     const MODAL_CONTEXTS = {
@@ -122,12 +127,21 @@
                 context: 'add',
                 modalDataSet: null,
 				searchText: '',
-                filterText: ''
+                searchTimeout: null,
+                searchTimeoutLength: 500
 			}
 		},
         created() {
 			// Inject the modify field so its always there
 		    this.fields.push({ key: "modify", thStyle: { width: "1px" } });
+
+	        this.contextChanged({
+		        perPage: this.perPage,
+		        currentPage: this.currentPage,
+		        filter: '',
+		        sortBy: this.options.sortBy,
+		        sortDesc: this.options.sortDesc
+	        });
         },
         computed: {
 			// Get the modal title based on the context and resource name
@@ -215,17 +229,48 @@
             },
             // The navigation has changed, emit a custom event and fix buggy nav
 	        navChanged(page) {
+				let pageId = parseInt(this.$route.params.pageId);
+
 		        /**
+		         * If the total pages are less than the page route URL we need to trigger a
+		         * route change replace.
+                 *
+                 * The if else wrap is to prevent infinite loops
+		         */
+		        if(this.totalPages < pageId) {
+			        let goToLast = {
+			        	name: this.$route.name,
+                        params: { pageId: this.totalPages.toString() }
+			        };
+
+			        this.$router.replace(goToLast);
+
+                /**
                  * Set the current page on the nav to whatever the pageId is. This is needed because
                  * in some scenarios the nav jumps ahead of the actual table page and breaks the nav
-		         */
-				this.$refs.bPageNav.currentPage = parseInt(this.$route.params.pageId);
+                 */
+		        } else {
+			        this.$refs.bPageNav.currentPage = pageId;
+                }
 
 		        // Emit custom event in case anything needs to be done on nav change
 				this.$emit("table-nav-changed", page, this.$refs.bPageNav);
             },
-	        searchChanged(value) {
-				console.log(value);
+            // Filter the search results
+	        filterResults(evt) {
+				let value = evt.target.value.trim();
+
+		        clearTimeout(this.searchTimeout);
+
+		        this.searchTimeout = setTimeout(() => {
+			        this.searchText = value;
+		        }, this.searchTimeoutLength);
+            },
+            contextChanged(ctx) {
+	            let params = getParamsString(PAGINATION_PARAMS_MAP, ctx);
+	            params = addFilterableColumns(params, this.fields);
+
+	            this.$emit('table-context-changed', ctx, params);
             }
         }
 	}

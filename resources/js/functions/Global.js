@@ -2,6 +2,7 @@
 export const PAGINATION_PARAMS_MAP = {
 	perPage: "pagination",
 	currentPage: "page[number]",
+	filter: "filter",
 	sortBy: "sort[by]",
 	sortDesc: "sort[desc]"
 };
@@ -27,4 +28,14 @@ export function getParamsString(param_map, value_map) {
 
 	// Return the param string
 	return out;
+}
+
+export function addFilterableColumns(params, fields, column_key = "filter_columns") {
+	fields.forEach(field => {
+		if(field.filterable) {
+			params += `&${column_key}[]=${field.key}`;
+		}
+	});
+
+	return params;
 }
