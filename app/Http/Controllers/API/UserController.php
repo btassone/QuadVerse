@@ -46,7 +46,6 @@ class UserController extends Controller
     	if($pagination) {
 
 			if($filter != '') {
-
 				foreach($filter_columns as $key => $column) {
 					if($key == 0) {
 						$users = $users->where($column, 'like', "%{$filter}%");
