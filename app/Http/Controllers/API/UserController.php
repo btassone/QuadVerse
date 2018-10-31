@@ -28,12 +28,10 @@ class UserController extends Controller
     	$pagination = ($request->pagination) ? $request->pagination : 0;
     	$sortBy = null;
     	$sortDesc = 'asc';
-    	$filter = '';
-    	$filter_columns = '';
+    	$filter = [];
 
     	if($request->filter) {
 			$filter = $request->filter;
-			$filter_columns = $request->filter_columns;
 		}
 
     	if($request->sort) {
@@ -44,14 +42,8 @@ class UserController extends Controller
 		$users = User::query();
 
     	if($pagination) {
-
-			if($filter != '') {
-				foreach($filter_columns as $key => $column) {
-					if($key == 0) {
-						$users = $users->where($column, 'like', "%{$filter}%");
-					}
-					$users = $users->orWhere($column, 'like', "%{$filter}%");
-				}
+			foreach($filter as $column => $search) {
+				$users = $users->orWhere($column, 'like', "%{$search}%");
 			}
 
 			if($sortBy) {

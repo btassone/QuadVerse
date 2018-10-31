@@ -58,43 +58,9 @@
 	const PAGINATION_PARAMS_MAP = {
 		perPage: "pagination",
 		currentPage: "page[number]",
-		filter: "filter",
 		sortBy: "sort[by]",
 		sortDesc: "sort[desc]"
 	};
-
-	function getParamsString(param_map, value_map) {
-		let out = "";
-		let value_keys = Object.keys(value_map);
-
-		// Loop over the key values
-		value_keys.forEach((key, index) => {
-
-			// If the value isn't undefined, null, or empty
-			if(value_map[key] !== undefined && value_map[key] !== null && value_map[key] !== "") {
-
-				// If first one, skip the &
-				if(index !== 0)
-					out += '&';
-
-				// Add the param name and value with an = symbol in between
-				out += `${param_map[key]}=${value_map[key]}`;
-			}
-		});
-
-		// Return the param string
-		return out;
-	}
-
-	function addFilterableColumns(params, fields, column_key = "filter_columns") {
-		fields.forEach(field => {
-			if(field.filterable) {
-				params += `&${column_key}[]=${field.key}`;
-			}
-		});
-
-		return params;
-	}
 
 	export default {
 		name: 'crud-table',
@@ -143,7 +109,8 @@
 				defaultFields: [
 					{ key: "modify", thStyle: { width: "1px" } }
 				],
-				filterableFields: []
+				filterableFields: [],
+				filterableFieldsValues: []
 			}
 		},
 		created() {
@@ -151,7 +118,7 @@
 			this.defaultFields.forEach(defaultField => this.fields.push(defaultField));
 
 			// Set the possible filter fields before we add modify
-			this.filterableFields = this.fields;
+			this.filterableFields = this.fields.filter(field => field.filterable);
 
 			// Set the initial context
 			this.contextChanged({
@@ -295,23 +262,35 @@
 
 				this.searchTimeout = setTimeout(() => {
 					let columnData = this.isColumnSearch(value);
-					console.log(columnData);
 
-					if(!columnData) {
-						this.searchText = value;
-					} else {
-						this.filterableFields = this.fields.filter(field => field.key === columnData.key);
-						this.searchText = columnData.search;
-					}
+					this.filterableFieldsValues = this.setFilteredValues((columnData) ? columnData : value);
+					this.searchText = value;
 
 				}, this.searchTimeoutLength);
 			},
 			// Set the url parameters prior to data grab
 			contextChanged(ctx) {
-				let params = getParamsString(PAGINATION_PARAMS_MAP, ctx);
-				params = addFilterableColumns(params, this.filterableFields);
+				// Get the parameter string for the request
+				let params = this.getParamsString(PAGINATION_PARAMS_MAP, ctx, this.filterableFieldsValues);
 
 				this.$emit('table-context-changed', ctx, params);
+			},
+			/**
+			 * Given the search data (un specified column search string) or (array of key/search object parameters)
+			 * loop through the available filtered fields and pair the key with the search value
+			 */
+			setFilteredValues(searchData) {
+				let availableFilterValues = [];
+
+				this.filterableFields.forEach(field => {
+					if(Array.isArray(searchData)) {
+						searchData.forEach(data => (data.key === field.key) ? availableFilterValues.push(data) : null);
+					} else {
+						availableFilterValues.push({ key: field.key, search: searchData })
+					}
+				});
+
+				return availableFilterValues;
 			},
 			/**
 			 * Parse the search text for the column pattern match.
@@ -322,7 +301,7 @@
 			 */
 			isColumnSearch(searchText) {
 				let matches = searchText.match(/(?<=\[)(.*?)(?=:)|(?<=:)(.*?)(?=\])/g);
-				let pairLength = (matches) ? matches.length / 2 : 0;
+				let pairLength = Math.floor((matches) ? matches.length / 2 : 0);
 				let possibleFilterLength = this.fields.length - this.defaultFields.length;
 				let columns = [];
 
@@ -332,13 +311,47 @@
 
 					columns.push({
 						key: matches[scaledKeyIndex],
-						search: matches[scaledSearchIndex]
+						search: matches[scaledSearchIndex].trim()
 					});
 				}
 
-				console.log(columns);
+				return (matches && pairLength >= 1 && pairLength <= possibleFilterLength) ? columns : false;
+			},
+			/**
+			 * Take in a set of default parameter maps, a value object input that contains those pair set ups and match
+			 * them to their param key. Also pass in the list of filters in a key/search format to be added to the query
+			 *
+			 * @param param_map
+			 * @param value_map
+			 * @param filters
+			 * @returns {string}
+			 */
+			// TODO: Add or/and/not functionality
+			getParamsString(param_map, value_map, filters) {
+				let out = "";
+				let param_keys = Object.keys(param_map);
 
-				return (matches && pairLength >= 1 && pairLength <= possibleFilterLength) ? columns[0] : false;
+				// Loop over the key values
+				param_keys.forEach((key, index) => {
+
+					// If the value isn't undefined, null, or empty
+					if(value_map[key] !== undefined && value_map[key] !== null && value_map[key] !== "") {
+
+						// If first one, skip the &
+						if(index !== 0)
+							out += '&';
+
+						// Add the param name and value with an = symbol in between
+						out += `${param_map[key]}=${value_map[key]}`;
+					}
+				});
+
+				filters.forEach(filter => {
+					out += `&filter[${filter.key}]=${filter.search}`;
+				});
+
+				// Return the param string
+				return out;
 			}
 		}
 	}
