@@ -99,14 +99,21 @@
 		methods: {
 			// Load all the users in the DB
 			loadUsers() {
+				// Set up the ajax call
 				let promise = this.$http.get(`${this.apiUrl}?${this.params}`);
 
+				// Return our ajax promise
 				return promise.then(({data}) => {
+					// Get the returned user data
 					let users = data.data;
+
+					// Get the total records in the DB
 					let total = data.total;
 
+					// Get the totalPages
 					this.totalPages = Math.ceil(total / this.perPage);
 
+					// Return the users
 					return(users || []);
 				})
 			},

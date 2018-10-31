@@ -36,7 +36,7 @@
 			</template>
 		</b-table>
 		<b-pagination-nav base-url="./" :number-of-pages="totalPages" :value="currentPage" prev-text="Prev" next-text="Next"
-			ref="bPageNav" @input="navChanged" use-router>
+			ref="bPageNav" @input="navChanged" :disabled="disableNav" use-router>
 		</b-pagination-nav>
 		<b-modal ref="resourceModal" ok-variant="success" :ok-title="contextOkText" cancel-variant="danger" :title="contextTitle"
 			centered @ok="contextItem">
@@ -109,6 +109,7 @@
 			},
 			totalPages: {
 				type: Number,
+				required: true
 			},
 			fields: {
 				type: Array,
@@ -137,7 +138,8 @@
 				modalDataSet: null,
 				searchText: '',
 				searchTimeout: null,
-				searchTimeoutLength: 500
+				searchTimeoutLength: 500,
+				disableNav: false
 			}
 		},
 		created() {
@@ -241,6 +243,9 @@
 				// Original value is string
 				let pageId = parseInt(this.$route.params.pageId);
 
+				// Should we disable the navigation?
+				this.disableNav = this.totalPages === 0;
+
 				/**
 				 * If the total pages are less than the page route URL or the pageId is 0
 				 * we need to trigger a route change replace.
@@ -248,13 +253,15 @@
 				 * The if else wrap is to prevent infinite loops
 				 */
 				if(this.totalPages < pageId || pageId <= 0) {
-					let newPageId = (pageId <= 0) ? 1 : this.totalPages;
-
-					console.log(`Total Pages: ${this.totalPages}`, `PageID: ${pageId}`);
+					/**
+					 * So in this scenario the page ID is either past the total page count or the page ID is less than
+					 * 0 pages and has items so we either return 1 or totalPages
+					 */
+					let newPageId = (pageId > 0 && this.totalPages !== 0) ? this.totalPages : 1;
 
 					let goToLastOrFirst = {
 						name: this.$route.name,
-						params: { pageId: newPageId }
+						params: { pageId: newPageId.toString() }
 					};
 
 					this.$router.replace(goToLastOrFirst);
@@ -264,7 +271,6 @@
 				 * in some scenarios the nav jumps ahead of the actual table page and breaks the nav
 				 */
 				} else {
-					console.log(`PageID: ${pageId}`);
 					this.$refs.bPageNav.currentPage = pageId;
 				}
 
@@ -287,6 +293,9 @@
 				params = addFilterableColumns(params, this.fields);
 
 				this.$emit('table-context-changed', ctx, params);
+			},
+			noItems() {
+				console.log("No Items");
 			}
 		}
 	}
