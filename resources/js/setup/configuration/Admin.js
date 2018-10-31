@@ -56,7 +56,7 @@ export default {
 						},
 						{
 							path: 'account-management',
-							redirect: 'account-management/users/page/1',
+							redirect: 'account-management/users',
 							name: 'Account Management',
 							component: {
 								render (c) { return c('router-view') }
@@ -95,10 +95,10 @@ export default {
 				}
 			]
 		},
-		// {
-		// 	path :'*',
-		// 	redirect: '/admin'
-		// }
+		{
+			path :'*',
+			redirect: '/admin'
+		}
 	],
 	plugins: [
 		{ def: BootstrapVue, options: {} }
