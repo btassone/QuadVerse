@@ -24,6 +24,12 @@ export const AdminAuthPaths = {
 	logout: { name: 'Login' }
 };
 
+function convertPageIdToInt(route) {
+	return {
+		pageId: (route.params.pageId !== undefined) ? parseInt(route.params.pageId) : 1
+	};
+}
+
 // Routes
 export default {
 	context: "Admin",
@@ -60,10 +66,18 @@ export default {
 							},
 							children: [
 								{
+									path: 'users',
+									redirect: 'users/page/1'
+								},
+								{
+									path: 'users/page',
+									redirect: 'users/page/1'
+								},
+								{
 									path: 'users/page/:pageId',
 									name: 'Users',
 									component: Users,
-									props: true
+									props: convertPageIdToInt
 								},
 								{
 									path: 'roles',
@@ -84,10 +98,10 @@ export default {
 				}
 			]
 		},
-		{
-			path :'*',
-			redirect: '/admin'
-		}
+		// {
+		// 	path :'*',
+		// 	redirect: '/admin'
+		// }
 	],
 	plugins: [
 		{ def: BootstrapVue, options: {} }

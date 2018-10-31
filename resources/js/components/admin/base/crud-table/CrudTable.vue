@@ -46,9 +46,6 @@
 </template>
 <script>
 	import swal                             from "sweetalert2";
-	import { getParamsString }              from "../../../functions/Global";
-	import { addFilterableColumns }         from "../../../functions/Global";
-	import { PAGINATION_PARAMS_MAP }        from "../../../functions/Global";
 
 	// Modal contexts and titles
 	const MODAL_CONTEXTS = {
@@ -56,6 +53,48 @@
 		edit: { title: 'Edit', btn: 'Update' },
 		delete: { title: 'Delete', btn: 'Delete' }
 	};
+
+	// Keys are the context keys mapped to the string to pass in the request
+	const PAGINATION_PARAMS_MAP = {
+		perPage: "pagination",
+		currentPage: "page[number]",
+		filter: "filter",
+		sortBy: "sort[by]",
+		sortDesc: "sort[desc]"
+	};
+
+	function getParamsString(param_map, value_map) {
+		let out = "";
+		let value_keys = Object.keys(value_map);
+
+		// Loop over the key values
+		value_keys.forEach((key, index) => {
+
+			// If the value isn't undefined, null, or empty
+			if(value_map[key] !== undefined && value_map[key] !== null && value_map[key] !== "") {
+
+				// If first one, skip the &
+				if(index !== 0)
+					out += '&';
+
+				// Add the param name and value with an = symbol in between
+				out += `${param_map[key]}=${value_map[key]}`;
+			}
+		});
+
+		// Return the param string
+		return out;
+	}
+
+	function addFilterableColumns(params, fields, column_key = "filter_columns") {
+		fields.forEach(field => {
+			if(field.filterable) {
+				params += `&${column_key}[]=${field.key}`;
+			}
+		});
+
+		return params;
+	}
 
 	export default {
 		name: 'crud-table',
@@ -70,7 +109,6 @@
 			},
 			totalPages: {
 				type: Number,
-				required: true
 			},
 			fields: {
 				type: Array,
@@ -200,27 +238,33 @@
 			},
 			// The navigation has changed, emit a custom event and fix buggy nav
 			navChanged(page) {
+				// Original value is string
 				let pageId = parseInt(this.$route.params.pageId);
 
 				/**
-				 * If the total pages are less than the page route URL we need to trigger a
-				 * route change replace.
+				 * If the total pages are less than the page route URL or the pageId is 0
+				 * we need to trigger a route change replace.
 				 *
 				 * The if else wrap is to prevent infinite loops
 				 */
-				if(this.totalPages < pageId) {
-					let goToLast = {
+				if(this.totalPages < pageId || pageId <= 0) {
+					let newPageId = (pageId <= 0) ? 1 : this.totalPages;
+
+					console.log(`Total Pages: ${this.totalPages}`, `PageID: ${pageId}`);
+
+					let goToLastOrFirst = {
 						name: this.$route.name,
-						params: { pageId: this.totalPages.toString() }
+						params: { pageId: newPageId }
 					};
 
-					this.$router.replace(goToLast);
+					this.$router.replace(goToLastOrFirst);
 
 				/**
 				 * Set the current page on the nav to whatever the pageId is. This is needed because
 				 * in some scenarios the nav jumps ahead of the actual table page and breaks the nav
 				 */
 				} else {
+					console.log(`PageID: ${pageId}`);
 					this.$refs.bPageNav.currentPage = pageId;
 				}
 

@@ -3,7 +3,7 @@
 		<h1 class="mb-3">Manage Users</h1>
 		<b-row>
 			<b-col lg="12">
-				<crud-table :fields="fields" :per-page="perPage" :items="loadUsers" :current-page="compPageId"
+				<crud-table :fields="fields" :per-page="perPage" :items="loadUsers" :current-page="pageId"
 						:total-pages="totalPages" :options="options" resource-icon="fa-users" resource-name="Users"
 						@add-item="addUser" @edit-item="editUser" @delete-item="deleteUser" @modal-open="modalOpen"
 						@table-context-changed="setParams">
@@ -32,7 +32,7 @@
 	</div>
 </template>
 <script>
-	import CrudTable                        from "../base/CrudTable";
+	import CrudTable                        from "../base/crud-table/CrudTable";
 	import formatDate                       from "../../../filters/FormatDate";
 	import Form                             from "vform";
 	import { HasError }                     from "vform";
@@ -48,7 +48,7 @@
 		},
 		props: {
 			pageId: {
-				type: String
+				type: Number
 			}
 		},
 		data: () => {
@@ -87,16 +87,14 @@
 					password: ''
 				}),
 				perPage: 5,
-				totalPages: parseInt(this.pageId),
+				totalPages: 0,
 				params: '',
 				apiUrl: '/api/v1/users'
 			}
 		},
-		computed: {
-			// Parse the integer and return the pageId
-			compPageId() {
-				return parseInt(this.pageId);
-			}
+		created() {
+			// Before we have an actual total. Assume total page length is equal to where we want to go
+			this.totalPages = this.pageId;
 		},
 		methods: {
 			// Load all the users in the DB
