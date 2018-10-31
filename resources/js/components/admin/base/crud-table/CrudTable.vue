@@ -259,11 +259,13 @@
 					 */
 					let newPageId = (pageId > 0 && this.totalPages !== 0) ? this.totalPages : 1;
 
+					// Setup the new route info
 					let goToLastOrFirst = {
 						name: this.$route.name,
 						params: { pageId: newPageId.toString() }
 					};
 
+					// Replace route without triggering history
 					this.$router.replace(goToLastOrFirst);
 
 				/**
@@ -293,9 +295,6 @@
 				params = addFilterableColumns(params, this.fields);
 
 				this.$emit('table-context-changed', ctx, params);
-			},
-			noItems() {
-				console.log("No Items");
 			}
 		}
 	}
