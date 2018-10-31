@@ -3,19 +3,9 @@
         <h1 class="mb-3">Manage Users</h1>
         <b-row>
             <b-col lg="12">
-                <crud-table
-                        :fields="fields"
-                        :per-page="perPage"
-                        :items="loadUsers"
-                        :current-page="compPageId"
-                        :total-pages="totalPages"
-                        :options="options"
-                        resource-icon="fa-users"
-                        resource-name="Users"
-                        @add-item="addUser"
-                        @edit-item="editUser"
-                        @delete-item="deleteUser"
-                        @modal-open="modalOpen"
+                <crud-table :fields="fields" :per-page="perPage" :items="loadUsers" :current-page="compPageId"
+                        :total-pages="totalPages" :options="options" resource-icon="fa-users" resource-name="Users"
+                        @add-item="addUser" @edit-item="editUser" @delete-item="deleteUser" @modal-open="modalOpen"
                         @table-context-changed="setParams">
                     <template slot="modal-content">
                         <form @submit.prevent>

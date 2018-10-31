@@ -13,33 +13,17 @@
 					</span>
 				</div>
 				<div class="d-flex col-8 justify-content-end">
-					<input
-							@input="filterResults"
-							placeholder="Search"
-							class="search-input mr-2 form-control"/>
+					<input @input="filterResults" placeholder="Search" class="search-input mr-2 form-control"/>
 					<b-button variant="success" @click="openModal('add')">
 						<i class="fa fa-plus"></i> Add {{resourceName}}
 					</b-button>
 				</div>
 			</div>
 		</template>
-		<b-table
-				ref="bTable"
-				:items="items"
-				:fields="fields"
-				:filter="searchText"
-				:current-page="currentPage"
-				:per-page="perPage"
-				empty-text="There are no records to show"
-				empty-filtered-text="There are no records matching your request"
-				class="table-align-middle"
-				stacked="md"
-				@refreshed="tableRefreshed"
-				@context-changed="contextChanged"
-				show-empty
-				responsive
-				striped
-				v-bind="options">
+		<b-table ref="bTable" :items="items" :fields="fields" :filter="searchText" :current-page="currentPage"
+				 :per-page="perPage" v-bind="options" empty-text="There are no records to show"
+				 empty-filtered-text="There are no records matching your request" class="table-align-middle" stacked="md"
+				 @refreshed="tableRefreshed" @context-changed="contextChanged" show-empty responsive striped>
 			<template slot="modify" slot-scope="{ item }">
 				<div class="d-flex align-items-center">
 					<button class="btn btn-primary m-1" @click="openModal('edit', item)">
@@ -51,24 +35,11 @@
 				</div>
 			</template>
 		</b-table>
-		<b-pagination-nav
-				base-url="./"
-				:number-of-pages="totalPages"
-				:value="currentPage"
-				prev-text="Prev"
-				next-text="Next"
-				ref="bPageNav"
-				@input="navChanged"
-				use-router>
+		<b-pagination-nav base-url="./" :number-of-pages="totalPages" :value="currentPage" prev-text="Prev" next-text="Next"
+			ref="bPageNav" @input="navChanged" use-router>
 		</b-pagination-nav>
-		<b-modal
-				ref="resourceModal"
-				ok-variant="success"
-				:ok-title="contextOkText"
-				cancel-variant="danger"
-				:title="contextTitle"
-				centered
-				@ok="contextItem">
+		<b-modal ref="resourceModal" ok-variant="success" :ok-title="contextOkText" cancel-variant="danger" :title="contextTitle"
+			centered @ok="contextItem">
 			<slot name="modal-content"></slot>
 		</b-modal>
 	</b-card>
