@@ -57,7 +57,8 @@
 					{
 						key: "id",
 						sortable: true,
-						thStyle: { width: "80px" }
+						thStyle: { width: "80px" },
+						filterable: true
 					},
 					{
 						key: "name",

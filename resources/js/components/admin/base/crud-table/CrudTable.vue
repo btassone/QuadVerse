@@ -139,13 +139,21 @@
 				searchText: '',
 				searchTimeout: null,
 				searchTimeoutLength: 500,
-				disableNav: false
+				disableNav: false,
+				defaultFields: [
+					{ key: "modify", thStyle: { width: "1px" } }
+				],
+				filterableFields: []
 			}
 		},
 		created() {
 			// Inject the modify field so its always there
-			this.fields.push({ key: "modify", thStyle: { width: "1px" } });
+			this.defaultFields.forEach(defaultField => this.fields.push(defaultField));
 
+			// Set the possible filter fields before we add modify
+			this.filterableFields = this.fields;
+
+			// Set the initial context
 			this.contextChanged({
 				perPage: this.perPage,
 				currentPage: this.currentPage,
@@ -286,15 +294,51 @@
 				clearTimeout(this.searchTimeout);
 
 				this.searchTimeout = setTimeout(() => {
-					this.searchText = value;
+					let columnData = this.isColumnSearch(value);
+					console.log(columnData);
+
+					if(!columnData) {
+						this.searchText = value;
+					} else {
+						this.filterableFields = this.fields.filter(field => field.key === columnData.key);
+						this.searchText = columnData.search;
+					}
+
 				}, this.searchTimeoutLength);
 			},
 			// Set the url parameters prior to data grab
 			contextChanged(ctx) {
 				let params = getParamsString(PAGINATION_PARAMS_MAP, ctx);
-				params = addFilterableColumns(params, this.fields);
+				params = addFilterableColumns(params, this.filterableFields);
 
 				this.$emit('table-context-changed', ctx, params);
+			},
+			/**
+			 * Parse the search text for the column pattern match.
+			 * Form: [key: search] Ignores all other text
+			 *
+			 * @param searchText
+			 * @returns {{key: string, value: string}}
+			 */
+			isColumnSearch(searchText) {
+				let matches = searchText.match(/(?<=\[)(.*?)(?=:)|(?<=:)(.*?)(?=\])/g);
+				let pairLength = (matches) ? matches.length / 2 : 0;
+				let possibleFilterLength = this.fields.length - this.defaultFields.length;
+				let columns = [];
+
+				for(let i = 0; i < pairLength; i++) {
+					let scaledKeyIndex = i * 2;
+					let scaledSearchIndex = scaledKeyIndex + 1;
+
+					columns.push({
+						key: matches[scaledKeyIndex],
+						search: matches[scaledSearchIndex]
+					});
+				}
+
+				console.log(columns);
+
+				return (matches && pairLength >= 1 && pairLength <= possibleFilterLength) ? columns[0] : false;
 			}
 		}
 	}
