@@ -346,7 +346,7 @@
 
 				// Join the filters to the param string
 				filters.forEach(filter => {
-					out += `&filter[${filter.key}]=${filter.search}`;
+					out += `&filter[${filter.key}]=${encodeURIComponent(filter.search)}`;
 				});
 
 				// Return the param string

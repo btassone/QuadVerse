@@ -43,7 +43,15 @@ class UserController extends Controller
 
     	if($pagination) {
 			foreach($filter as $column => $search) {
-				$users = $users->orWhere($column, 'like', "%{$search}%");
+				$columnOr = (strpos($search, "+") !== false) ? explode("+", $search) : false;
+
+				if($columnOr !== false) {
+					foreach($columnOr as  $or) {
+						$users = $users->orWhere($column, 'like', "%{$or}%");
+					}
+				} else {
+					$users = $users->orWhere( $column, 'like', "%{$search}%" );
+				}
 			}
 
 			if($sortBy) {
