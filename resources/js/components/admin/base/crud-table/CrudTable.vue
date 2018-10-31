@@ -8,9 +8,7 @@
 		<template slot="header">
 			<div class="row">
 				<div class="d-flex col-4 align-items-center">
-					<span>
-						<i class='fa' :class="resourceIcon"></i> {{resourceName}} List
-					</span>
+					<span><i class='fa' :class="resourceIcon"></i> {{resourceName}} List</span>
 				</div>
 				<div class="d-flex col-8 justify-content-end">
 					<input @input="filterResults" placeholder="Search" class="search-input mr-2 form-control"/>
@@ -346,6 +344,7 @@
 					}
 				});
 
+				// Join the filters to the param string
 				filters.forEach(filter => {
 					out += `&filter[${filter.key}]=${filter.search}`;
 				});
