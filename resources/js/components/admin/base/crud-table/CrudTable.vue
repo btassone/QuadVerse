@@ -81,7 +81,10 @@
 			},
 			options: {
 				type: Object,
-				default: {}
+				default: () => {return {
+					sortBy: 'id',
+					sortDesc: false
+				}}
 			},
 			perPage: {
 				type: Number,
