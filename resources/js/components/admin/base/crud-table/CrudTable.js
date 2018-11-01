@@ -256,7 +256,7 @@ export default {
 		 * @returns {{key: string, value: string}}
 		 */
 		isColumnSearch(searchText) {
-			let matches = searchText.match(/(?<=\[)(.*?)(?=:)|(?<=:)(.*?)(?=\])/g);
+			let matches = searchText.match(/(?<=\[)(.*?)(?=:)|(?<=:)(.*?)(?=\])/gi);
 			let pairLength = Math.floor((matches) ? matches.length / 2 : 0);
 			let possibleFilterLength = this.fields.length - this.defaultFields.length;
 			let columns = [];
