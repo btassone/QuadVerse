@@ -1,6 +1,6 @@
 # Laravel SPA Base
 
-[![Build Status](https://travis-ci.com/btassone/laravel-spa-base.svg?branch=develop)](https://travis-ci.com/btassone/laravel-spa-base)
+[![Build Status](https://travis-ci.com/btassone/laravel-spa-base.svg?branch=master)](https://travis-ci.com/btassone/laravel-spa-base)
 
 A Laravel / Vue SPA (Single Page App) base template for extending and using in projects.
 
