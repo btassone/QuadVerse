@@ -1,5 +1,4 @@
 {
     "/js/app.js": "/js/app.js",
-    "/css/app.css": "/css/app.css",
-    "/resources/js/components/admin/base/crud-table/CrudTable.spec.js": "/resources/js/components/admin/base/crud-table/CrudTable.spec.js"
+    "/css/app.css": "/css/app.css"
 }
