@@ -18,5 +18,4 @@ before_script:
 
 script:
 - vendor/bin/phpunit --coverage-text
-- npm run production
 - npm run test
