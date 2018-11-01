@@ -1,0 +1,25 @@
+language: php
+
+addons:
+  chrome: stable
+
+sudo: false
+
+php:
+  - 7.2
+
+env:
+  - LARAVEL_ENV=1
+
+before_script:
+  - |
+    # Remove Xdebug for a huge performance increase:
+    if [ -f ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini ]; then
+      phpenv config-rm xdebug.ini
+    else
+      echo "xdebug.ini does not exist"
+    fi
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+
+script:
+  - bash travis/install.sh
