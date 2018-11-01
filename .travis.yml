@@ -1,8 +1,5 @@
 language: php
 
-addons:
-  chrome: stable
-
 sudo: false
 
 php:

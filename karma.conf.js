@@ -5,6 +5,7 @@ module.exports = function(config) {
 		frameworks: ['mocha'],
 
 		files: [
+			'node_modules/babel-polyfill/dist/polyfill.js',
 			'resources/js/components/**/*.spec.js'
 		],
 
@@ -24,6 +25,18 @@ module.exports = function(config) {
 			]
 		},
 
-		browsers: ['Chrome'],
+		customLaunchers: {
+			'PhantomJS_custom': {
+				base: 'PhantomJS',
+				options: {
+					windowName: 'spa-window',
+					settings: {
+						webSecurityEnabled: false
+					}
+				}
+			}
+		},
+
+		browsers: ['Chrome', 'PhantomJS', 'PhantomJS_custom'],
 	})
 };
