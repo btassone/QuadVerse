@@ -13,14 +13,13 @@ before_script:
 - composer install --no-interaction
 - ls
 - cp .env.travis .env
-- pear install pear/PHP_CodeSniffer
 - phpenv rehash
+- php artisan key:generate
 - nvm install 10.9.0
 - npm install npm@latest -g
 - npm install
 
 script:
 - vendor/bin/phpunit --coverage-text
-- phpcs --ignore=app/Http/Controllers/Auth,app/Http/Controllers/Controller.php app/Http/Controllers
 - npm run production
 - npm run test
