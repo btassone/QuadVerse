@@ -3,27 +3,30 @@ let webpackConfig = require('laravel-mix/setup/webpack.config');
 module.exports = function(config) {
 	config.set({
 		frameworks: ['mocha'],
-
+		basePath: 'resources/js',
 		files: [
-			'node_modules/babel-polyfill/dist/polyfill.js',
-			'resources/js/components/**/*.spec.js'
+			{ pattern: 'components/**/tests/**/*.spec.js', watched: false }
 		],
 
 		preprocessors: {
-			'**/*.spec.js': ['webpack', 'sourcemap']
+			'components/**/tests/**/*.spec.js': ['webpack', 'sourcemap'],
 		},
-
 		webpack: webpackConfig,
 
 		reporters: ['spec', 'coverage'],
-
 		coverageReporter: {
-			dir: './coverage',
+			dir: '../../coverage',
 			reporters: [
 				{ type: 'lcov', subdir: '.' },
 				{ type: 'text-summary' }
 			]
 		},
+
+		webpackMiddleware: {
+			noInfo: true,
+			stats: 'errors-only'
+		},
+		logLevel: config.LOG_INFO,
 
 		customLaunchers: {
 			'PhantomJS_custom': {
@@ -36,7 +39,6 @@ module.exports = function(config) {
 				}
 			}
 		},
-
 		browsers: ['Chrome', 'PhantomJS', 'PhantomJS_custom'],
-	})
+	});
 };
