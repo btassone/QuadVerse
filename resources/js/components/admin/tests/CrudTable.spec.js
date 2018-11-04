@@ -74,6 +74,7 @@ describe('CrudTable.vue', () => {
 			fields: []
 		};
 
+		// Get random response data before tests.
 		responses = paginatedResponseFactory(numOfResults, resultsPerPage, dataModels, responseSort);
 
 		localVue = createLocalVue();
