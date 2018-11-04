@@ -17,10 +17,7 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
-        ],
-		\Laravel\Passport\Events\AccessTokenCreated::class => [
-			'App\Listeners\RevokeOldTokens',
-		],
+        ]
     ];
 
     /**
