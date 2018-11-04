@@ -11,42 +11,40 @@ import bTable 								from 'bootstrap-vue/es/components/table/table';
 import VueRouter 							from 'vue-router'
 
 // Data factories for testing
-import { paginatedResponseFactory } 		from "../../functions/utilities/TestUtilities";
+import { paginatedResponseFactory } 		from "../../functions/factories/PaginatedResponseFactory";
+
+// Generator functions
+import { nameGenerator }					from "../../functions/generators/NameGenerator";
+import { emailGenerator }					from "../../functions/generators/EmailGenerator";
+import { rangeGenerator }					from "../../functions/generators/RangeGenerator";
+import { dateGenerator }					from "../../functions/generators/DateGenerator";
 
 // Tested component
 import CrudTable 							from "../../components/admin/base/CrudTable";
 
-// Models
-let id = {
-	key: "id",
-	model: {
-		type: "range"
-	}
-};
-let name = {
-	key: "name",
-	model: {
-		type: "name"
-	}
+// Map the generator function to the model type
+let fieldTypeGeneratorMap = {
+	range: rangeGenerator,
+	name: nameGenerator,
+	email: emailGenerator,
+	date: dateGenerator
 };
 
-let email = {
-	key: "email",
-	model: {
-		type: "email"
-	}
-};
-
-let created_at = {
-	key: "created_at",
-	model: {
-		type: "date"
-	}
-};
-
+// Number of results to generate for our paginated data
 let numOfResults = 100;
+
+// The data items per pagination result
 let resultsPerPage = 8;
-let dataModels = [id, name, email, created_at];
+
+// Key model map to the fields
+let fieldKeyModelMap = [
+	{ key: "id", model: { type: "range" } },
+	{ key: "name", model: { type: "name" } },
+	{ key: "email", model: { type: "email" } },
+	{ key: "created_at", model: { type: "date" } }
+];
+
+// How to sort the response
 let responseSort = { by: "id", desc: false };
 
 function loadData(page) {
@@ -75,7 +73,13 @@ describe('CrudTable.vue', () => {
 		};
 
 		// Get random response data before tests.
-		responses = paginatedResponseFactory(numOfResults, resultsPerPage, dataModels, responseSort);
+		responses = paginatedResponseFactory(
+			fieldTypeGeneratorMap,
+			numOfResults,
+			resultsPerPage,
+			fieldKeyModelMap,
+			responseSort
+		);
 
 		localVue = createLocalVue();
 		localVue.use(BootstrapVue);
@@ -85,9 +89,7 @@ describe('CrudTable.vue', () => {
 	});
 
 	describe('Props', () => {
-
 		describe('Defaults', () => {
-
 			describe('Fields', () => {
 
 				it('empty prop array passed should still contain modify field', () => {
@@ -110,15 +112,11 @@ describe('CrudTable.vue', () => {
 				});
 
 			})
-
 		});
-
 	});
 
 	describe('Bootstrap', () => {
-
 		describe('Card', () => {
-
 			describe('Defaults', () => {
 
 				it('the title in the header should equal the default', () => {
@@ -155,11 +153,9 @@ describe('CrudTable.vue', () => {
 				});
 
 			});
-
 		});
 
 		describe('Table', () => {
-
 			describe('General', () => {
 
 				it('table exists', () => {
@@ -184,9 +180,6 @@ describe('CrudTable.vue', () => {
 				});
 
 			});
-
 		});
-
 	});
-
 });
