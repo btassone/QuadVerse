@@ -8,13 +8,11 @@ php:
 before_script:
 - composer self-update
 - composer install --no-interaction
-- ls
 - cp .env.travis .env
 - phpenv rehash
 - php artisan key:generate
 - nvm install 10.9.0
-- npm install npm@latest -g
-- npm install
+- npm ci
 
 script:
 - vendor/bin/phpunit --coverage-text

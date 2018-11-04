@@ -44,6 +44,21 @@ let created_at = {
 	}
 };
 
+let numOfResults = 100;
+let resultsPerPage = 8;
+let dataModels = [id, name, email, created_at];
+let responseSort = { by: "id", desc: false };
+
+function loadData(page) {
+	let promise = new Promise( resolve => setTimeout( () => resolve(page), 1000) );
+
+	return promise.then(data => {
+		let users = data.data;
+
+		return(users || []);
+	});
+}
+
 describe('CrudTable.vue', () => {
 	let requiredData;
 	let localVue;
@@ -59,7 +74,7 @@ describe('CrudTable.vue', () => {
 			fields: []
 		};
 
-		responses = paginatedResponseFactory(100, 8, [id, name, email, created_at]);
+		responses = paginatedResponseFactory(numOfResults, resultsPerPage, dataModels, responseSort);
 
 		localVue = createLocalVue();
 		localVue.use(BootstrapVue);

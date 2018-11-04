@@ -39,6 +39,6 @@ module.exports = function(config) {
 				}
 			}
 		},
-		browsers: ['Chrome', 'PhantomJS', 'PhantomJS_custom'],
+		browsers: ['Chrome', 'Firefox', 'PhantomJS', 'PhantomJS_custom'],
 	});
 };
