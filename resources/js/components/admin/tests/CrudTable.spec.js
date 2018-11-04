@@ -1,110 +1,172 @@
-import { expect } from 'chai'
-import { shallowMount, mount, createLocalVue } from '@vue/test-utils'
-import BootstrapVue from "bootstrap-vue";
-import bCard from 'bootstrap-vue/es/components/card/card';
-import bTable from 'bootstrap-vue/es/components/table/table';
-import VueRouter from 'vue-router'
-import CrudTable from "../base/crud-table/CrudTable";
+// Test framework imports
+import { shallowMount }						from '@vue/test-utils';
+import { mount }							from '@vue/test-utils';
+import { createLocalVue }					from '@vue/test-utils';
+import { expect } 							from 'chai'
+
+// Child components
+import BootstrapVue 						from "bootstrap-vue";
+import bCard 								from 'bootstrap-vue/es/components/card/card';
+import bTable 								from 'bootstrap-vue/es/components/table/table';
+import VueRouter 							from 'vue-router'
+
+// Data factories for testing
+import { paginatedResponseFactory } 		from "../../../functions/utilities/TestUtilities";
+
+// Tested component
+import CrudTable 							from "../base/crud-table/CrudTable";
+
+// Models
+let id = {
+	key: "id",
+	model: {
+		type: "range"
+	}
+};
+let name = {
+	key: "name",
+	model: {
+		type: "name"
+	}
+};
+
+let email = {
+	key: "email",
+	model: {
+		type: "email"
+	}
+};
+
+let created_at = {
+	key: "created_at",
+	model: {
+		type: "date"
+	}
+};
 
 describe('CrudTable.vue', () => {
-	const requiredData = {
-		items: () => [],
-		currentPage: 1,
-		totalPages: 1,
-		fields: []
-	};
+	let requiredData;
+	let localVue;
+	let wrapper;
+	let responses;
 
-	let resourceNameProps = Object.assign({resourceName: "Users"}, requiredData);
+	before(() => {
+		// CrudTable Setup
+		requiredData = {
+			items: () => [],
+			currentPage: 1,
+			totalPages: 1,
+			fields: []
+		};
 
-	let localVue = createLocalVue();
-	localVue.use(BootstrapVue);
-	localVue.use(VueRouter);
+		responses = paginatedResponseFactory(100, 8, [id, name, email, created_at]);
 
-	const wrapper = mount( CrudTable, { localVue, propsData: requiredData } );
+		localVue = createLocalVue();
+		localVue.use(BootstrapVue);
+		localVue.use(VueRouter);
 
-	describe('Fields', () => {
+		wrapper = mount( CrudTable, { localVue, propsData: requiredData } );
+	});
+
+	describe('Props', () => {
 
 		describe('Defaults', () => {
 
-			it('empty prop array passed should still contain modify field', () => {
+			describe('Fields', () => {
 
-				expect(wrapper
-					.vm
-					.fields
-					.length
-				).to.equal(1);
+				it('empty prop array passed should still contain modify field', () => {
 
-			});
+					expect(wrapper
+						.vm
+						.fields
+						.length
+					).to.equal(1);
 
-			it('empty prop array passed field that is injected should have key named modify', () => {
-				expect(wrapper
-					.vm
-					.fields[0]
-					.key
-				).to.equal("modify");
+				});
 
-			});
+				it('empty prop array passed field that is injected should have key named modify', () => {
+					expect(wrapper
+						.vm
+						.fields[0]
+						.key
+					).to.equal("modify");
+
+				});
+
+			})
 
 		});
 
 	});
 
-	describe('Card', () => {
+	describe('Bootstrap', () => {
 
-		it('card exists', () => {
+		describe('Card', () => {
 
-			expect(wrapper
-				.find(bCard)
-				.exists()
-			).to.equal(true);
+			describe('Defaults', () => {
 
-		});
+				it('the title in the header should equal the default', () => {
+					wrapper.setProps({resourceName: "Resource"});
 
-		it('the title in the header should be ${resource} list', () => {
-			wrapper.setProps({resourceName: "Users"});
+					expect(wrapper
+						.find("#resource-title")
+						.text().trim()
+					).to.equal("Resource List");
 
-			expect(wrapper
-				.find("#users-title")
-				.text().trim()
-			).to.equal("Users List");
+				});
 
-		});
+			});
 
-		describe('Defaults', () => {
+			describe('General', () => {
 
-			it('the title in the header should equal the default', () => {
-				wrapper.setProps({resourceName: "Resource"});
+				it('card exists', () => {
 
-				expect(wrapper
-					.find("#resource-title")
-					.text().trim()
-				).to.equal("Resource List");
+					expect(wrapper
+						.find(bCard)
+						.exists()
+					).to.equal(true);
+
+				});
+
+				it('the title in the header should be ${resource} list', () => {
+					wrapper.setProps({resourceName: "Users"});
+
+					expect(wrapper
+						.find("#users-title")
+						.text().trim()
+					).to.equal("Users List");
+
+				});
 
 			});
 
 		});
 
-	});
+		describe('Table', () => {
 
-	describe('Table', () => {
+			describe('General', () => {
 
-		it('table exists', () => {
-			expect(wrapper
-				.find(bTable)
-				.exists()
-			).to.equal(true);
-		});
+				it('table exists', () => {
+					expect(wrapper
+						.find(bTable)
+						.exists()
+					).to.equal(true);
+				});
 
-		describe('Events', () => {
+			});
 
-			it('table refreshed contains table reference on event and correct id', () => {
-				wrapper.setProps({resourceName: "Users"});
-				wrapper.vm.$emit('refreshed');
+			describe('Events', () => {
 
-				expect(wrapper
-					.emitted('table-refreshed')[0][0]
-					.id
-				).to.equal("users-table")
+				it('table refreshed contains table reference on event and correct id', () => {
+					wrapper.setProps({resourceName: "Users"});
+					wrapper.vm.$emit('refreshed');
+
+					expect(wrapper
+						.emitted('table-refreshed')[0][0]
+						.id
+					).to.equal("users-table")
+				});
+
 			});
 
 		});
