@@ -5,11 +5,11 @@ module.exports = function(config) {
 		frameworks: ['mocha'],
 		basePath: 'resources/js',
 		files: [
-			{ pattern: 'components/**/tests/**/*.spec.js', watched: false }
+			{ pattern: 'tests/**/*.spec.js', watched: false }
 		],
 
 		preprocessors: {
-			'components/**/tests/**/*.spec.js': ['webpack', 'sourcemap'],
+			'tests/**/*.spec.js': ['webpack', 'sourcemap'],
 		},
 		webpack: webpackConfig,
 

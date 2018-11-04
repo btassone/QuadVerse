@@ -151,6 +151,16 @@ export function dateGenerator(options, quantity) {
 	return generatedDates;
 }
 
+/**
+ * Takes data and paginates it like laravel does (based on the way spatie json-paginate dumps out)
+ *
+ * @param items
+ * @param perPage
+ * @param totalPages
+ * @param totalResponses
+ *
+ * @returns {Array}
+ */
 export function paginateData(items, perPage, totalPages, totalResponses) {
 	let paginatedData = [];
 	let tempData = [];
@@ -176,6 +186,16 @@ export function paginateData(items, perPage, totalPages, totalResponses) {
 	return paginatedData;
 }
 
+/**
+ * Takes sets of data that are equal in length and randomly picks data from each and matches them to the field key
+ * scheme to create lines of items
+ *
+ * @param data
+ * @param dataLength
+ * @param fields
+ *
+ * @returns {Array}
+ */
 export function pieceRandomDataIntoItems(data, dataLength, fields) {
 
 	let randomlyPiecedData = [];
@@ -218,6 +238,14 @@ export function pieceRandomDataIntoItems(data, dataLength, fields) {
 	return randomlyPiecedData;
 }
 
+/**
+ * Used for sorting data sets for tests (pre pagination - must be flat)
+ *
+ * @param data
+ * @param sort
+ *
+ * @returns {*}
+ */
 export function sortResponseData(data, sort) {
 	let lastNameSort = (a, b) => {
 		let splitA = a[sort.by].split(" ");

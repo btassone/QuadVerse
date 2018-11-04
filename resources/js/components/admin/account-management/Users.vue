@@ -32,7 +32,7 @@
 	</div>
 </template>
 <script>
-	import CrudTable                        from "../base/crud-table/CrudTable";
+	import CrudTable                        from "../base/CrudTable";
 	import formatDate                       from "../../../filters/FormatDate";
 	import Form                             from "vform";
 	import { HasError }                     from "vform";

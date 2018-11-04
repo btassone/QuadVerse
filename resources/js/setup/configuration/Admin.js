@@ -9,7 +9,7 @@ import Login from "../../components/admin/pages/Login";
 import Dashboard from "../../components/admin/Dashboard";
 
 // CoreUI container
-import DefaultContainer from "../../components/admin/containers/DefaultContainer";
+import DefaultContainer from "../../components/core-ui/containers/DefaultContainer";
 
 // Account Management
 import Users from "../../components/admin/account-management/Users";

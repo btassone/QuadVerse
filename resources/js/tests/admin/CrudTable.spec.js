@@ -11,10 +11,10 @@ import bTable 								from 'bootstrap-vue/es/components/table/table';
 import VueRouter 							from 'vue-router'
 
 // Data factories for testing
-import { paginatedResponseFactory } 		from "../../../functions/utilities/TestUtilities";
+import { paginatedResponseFactory } 		from "../../functions/utilities/TestUtilities";
 
 // Tested component
-import CrudTable 							from "../base/crud-table/CrudTable";
+import CrudTable 							from "../../components/admin/base/CrudTable";
 
 // Models
 let id = {
